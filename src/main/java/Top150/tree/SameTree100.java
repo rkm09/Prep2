@@ -1,4 +1,4 @@
-package Top150.easy;
+package Top150.tree;
 
 import GenDS.TreeNode;
 
