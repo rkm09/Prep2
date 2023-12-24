@@ -1,7 +1,7 @@
 package Top150.easy;
 
-
 import GenDS.TreeNode;
+
 
 public class SameTree100 {
     public static void main(String[] args) {
@@ -13,8 +13,13 @@ public class SameTree100 {
         TreeNode q = new TreeNode(1, left1, right1);
         System.out.println(isSameTree(p, q));
     }
+
+//    recursion; time: O(n), space: O(n)
     public static boolean isSameTree(TreeNode p, TreeNode q) {
-        return false;
+        if(p == null && q == null) return true;
+        if(p == null || q == null) return false;
+        if(p.val != q.val) return false;
+        return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
     }
 }
 
