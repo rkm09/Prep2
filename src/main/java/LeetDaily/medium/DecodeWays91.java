@@ -5,38 +5,77 @@ import java.util.Map;
 
 public class DecodeWays91 {
     static Map<Integer, Integer> memo = new HashMap<>();
+
     public static void main(String[] args) {
         String s = "11106";
-        System.out.println(numDecodings(s));
+        System.out.println(numDecodings2(s));
     }
 
-//    recursion with memo; time: O(n), space: O(n)
+    //    recursion with memo; time: O(n), space: O(n)
     public static int numDecodings(String s) {
         return recDecode(0, s);
     }
+
     private static int recDecode(int index, String s) {
-        if(memo.containsKey(index)) {
+        if (memo.containsKey(index)) {
             return memo.get(index);
         }
-        if(index == s.length()) {
+        if (index == s.length()) {
             return 1;
         }
-        if(s.charAt(index) == '0') {
+        if (s.charAt(index) == '0') {
             return 0;
         }
-        if(index == s.length() - 1) {
+        if (index == s.length() - 1) {
             return 1;
         }
 
         int ans = recDecode(index + 1, s);
-        if(Integer.parseInt(s.substring(index, index + 2)) <= 26) {
+        if (Integer.parseInt(s.substring(index, index + 2)) <= 26) {
             ans += recDecode(index + 2, s);
         }
         memo.put(index, ans);
         return ans;
     }
-}
 
+    //    iterative; DP (faster than rec); time: O(n), space: O(n)
+    public static int numDecodings1(String s) {
+        if (s.charAt(0) == '0') return 0;
+        int n = s.length();
+        int[] dp = new int[n + 1];
+        dp[0] = 1; dp[1] = 1;
+        for(int i = 2 ; i <= n ; i++) {
+            if(s.charAt(i-1) != '0') {
+                dp[i] = dp[i-1];
+            }
+            int twoDigit = Integer.parseInt(s.substring(i-2, i));
+            if(twoDigit >= 10 && twoDigit <= 26) {
+                dp[i] += dp[i-2];
+            }
+        }
+        return dp[n];
+    }
+
+//    iterative DP; constant space; time: O(n), space: O(1)
+    public static int numDecodings2(String s) {
+        if(s.charAt(0) == '0') return 0;
+        int n = s.length();
+        int twoBack = 1, oneBack = 1;
+        for(int i = 1 ; i < n ; i++) {
+            int current = 0;
+            if(s.charAt(i) != '0') {
+                current = oneBack;
+            }
+            int twoDigit = Integer.parseInt(s.substring(i - 1, i + 1));
+            if(twoDigit >= 10 && twoDigit <= 26) {
+                current += twoBack;
+            }
+            twoBack = oneBack;
+            oneBack = current;
+        }
+        return oneBack;
+    }
+}
 /*
 A message containing letters from A-Z can be encoded into numbers using the following mapping:
 'A' -> "1"
