@@ -7,8 +7,28 @@ public class MinTimeRope1578 {
     public static void main(String[] args) {
         int[] neededTime = {3,5,10,7,5,3,5,5,4,8,1};
         String colors = "aaabbbabbbb";
-        System.out.println(minCost(colors, neededTime));
+        System.out.println(minCost1(colors, neededTime));
     }
+
+//    time: O(n), space: O(n) [editorial uses String.charAt directly and so O(1) but time slower in that case]
+    public static int minCost1(String colors, int[] neededTime) {
+        int n = colors.length();
+        if(n == 1) return 0;
+        int totalMinTime = 0, currMaxTime = neededTime[0];
+        char[] carr = colors.toCharArray();
+        for(int i = 1 ; i < n ; i++) {
+            char c1 = carr[i-1];
+            char c2 = carr[i];
+            if(c1 != c2) {
+                currMaxTime = 0;
+            }
+            totalMinTime += Math.min(currMaxTime, neededTime[i]);
+            currMaxTime = Math.max(currMaxTime, neededTime[i]);
+        }
+        return totalMinTime;
+    }
+
+//    [def]; time: O(n); inplace(not recommended)
     public static int minCost(String colors, int[] neededTime) {
         int minTime = 0, n = colors.length();
         if(n == 1) return minTime;
