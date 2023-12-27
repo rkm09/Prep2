@@ -17,9 +17,8 @@ public class MinTimeRope1578 {
             char c1 = carr[i-1];
             char c2 = carr[i];
             if(c1 == c2) {
-                int currTime = Math.min(neededTime[i], neededTime[i-1]);
-                minTime += currTime;
-                neededTime[i] = neededTime[i] == currTime ? neededTime[i-1] : neededTime[i];
+                minTime += Math.min(neededTime[i], neededTime[i-1]);
+                neededTime[i] = Math.max(neededTime[i-1], neededTime[i]);
             }
         }
         return minTime;
