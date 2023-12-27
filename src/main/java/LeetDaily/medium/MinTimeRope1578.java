@@ -13,11 +13,6 @@ public class MinTimeRope1578 {
         int minTime = 0, n = colors.length();
         if(n == 1) return minTime;
         char[] carr = colors.toCharArray();
-        Set<Character> set = new HashSet<>();
-        for(int i = 0 ; i < n ; i++) {
-            set.add(carr[i]);
-        }
-        if(set.size() == n) return minTime;
         for(int i = 1 ; i < n ; i++) {
             char c1 = carr[i-1];
             char c2 = carr[i];
