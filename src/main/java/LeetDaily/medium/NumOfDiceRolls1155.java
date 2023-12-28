@@ -1,13 +1,19 @@
 package LeetDaily.medium;
 
+import java.util.Arrays;
+
 public class NumOfDiceRolls1155 {
     static final int MOD = (int) 1e9 + 7;
     public static void main(String[] args) {
-        System.out.println(numRollsToTarget(1,6,3));
+        System.out.println(numRollsToTarget(3,2,4));
     }
     public static int numRollsToTarget(int n, int k, int target) {
         Integer[][] memo = new Integer[n + 1][target + 1];
-        return waysToTarget(memo, n, k, target, 0, 0);
+        int res =  waysToTarget(memo, n, k, target, 0, 0);
+        for(Integer[] g : memo) {
+            System.out.println(Arrays.toString(g));
+        }
+        return res;
     }
     private static int waysToTarget(Integer[][] memo, int n, int k, int target, int diceIndex, int currSum) {
         if(diceIndex == n) {
@@ -18,7 +24,9 @@ public class NumOfDiceRolls1155 {
         }
         int ways = 0;
         for(int i = 1 ; i <= Math.min(k, target - currSum) ; i++) {
+            System.out.println("diceIndex: "+ diceIndex + ", currSum: "+ currSum + ", i: "+ i);
             ways = (ways + waysToTarget(memo, n, k, target, diceIndex + 1, currSum + i)) % MOD;
+            System.out.println("ways: "+ ways);
         }
         return memo[diceIndex][currSum] = ways;
     }
