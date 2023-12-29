@@ -1,10 +1,13 @@
 package LeetDaily.hard;
 
 
+import java.util.Arrays;
+
 public class MinDiffJobSchedule1335 {
     public static void main(String[] args) {
-        int[] jobDifficulty = {6,5,4,3,2,1};
-        int d = 2;
+//        int[] jobDifficulty = {6,5,4,3,2,1};
+        int[] jobDifficulty = {7,1,7,1,7,1};
+        int d = 3;
         System.out.println(minDifficulty(jobDifficulty, d));
     }
     public static int minDifficulty(int[] jobDifficulty, int d) {
