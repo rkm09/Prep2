@@ -1,29 +1,31 @@
 package LeetDaily.hard;
 
 public class ValidPalindrome1216 {
+    private static Integer[][] memo;
     public static void main(String[] args) {
-        String s = "cacababac"; int k = 3;
+        String s = "bacabaaa"; int k = 2;
         System.out.println(isValidPalindrome(s, k));
     }
     public static boolean isValidPalindrome(String s, int k) {
-        char[] carr = s.toCharArray();
-        int n = carr.length;
-        if(n == 1) return true;
-        int i = 0, j = n - 1;
-        while(i < j) {
-            if(carr[i] != carr[j]) {
-                if(k < 1) return false;
-                while(k > 0) {
-                    if(carr[i+1] == carr[j]) {
-                        i++; k--;
-                    } else if(carr[i] == carr[j-1]) {
-                        j--; k--;
-                    }
-                }
-            }
-            i++; j--;
+        int n = s.length();
+        memo = new Integer[n][n];
+        return isValidPalindrome(s, 0, n - 1) <= k;
+    }
+    private static int isValidPalindrome(String s, int i, int j) {
+        if(i == j) {
+            return 0;
         }
-        return true;
+        if(i == j - 1) {
+            return s.charAt(i) != s.charAt(j) ? 1 : 0;
+        }
+        if(memo[i][j] != null) {
+            return memo[i][j];
+        }
+        if(s.charAt(i) == s.charAt(j)) {
+            return memo[i][j] = isValidPalindrome(s, i + 1, j - 1);
+        }
+
+        return memo[i][j] = 1 + Math.min(isValidPalindrome(s, i + 1, j), isValidPalindrome(s, i, j - 1));
     }
 }
 /*
