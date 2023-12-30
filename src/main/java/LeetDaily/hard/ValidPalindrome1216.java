@@ -4,12 +4,13 @@ public class ValidPalindrome1216 {
     private static Integer[][] memo;
     public static void main(String[] args) {
         String s = "bacabaaa"; int k = 2;
-        System.out.println(isValidPalindrome(s, k));
+        System.out.println(isValidPalindrome1(s, k));
     }
 
 //    Top down DP(2D); time: O(n^2), space: O(n^2)
+//    In this case top down more efficient
     public static boolean isValidPalindrome(String s, int k) {
-        int n = s.length();
+        final int n = s.length();
         memo = new Integer[n][n];
         return isValidPalindrome(s, 0, n - 1) <= k;
     }
@@ -28,6 +29,46 @@ public class ValidPalindrome1216 {
         }
 
         return memo[i][j] = 1 + Math.min(isValidPalindrome(s, i + 1, j), isValidPalindrome(s, i, j - 1));
+    }
+
+    //    Bottom up DP(2D); time: O(n^2), space: O(n^2)
+    public static boolean isValidPalindrome1(String s, int k) {
+        final int n = s.length();
+        int[][] memo = new int[n][n];
+        for(int i = n - 2 ; i >= 0 ; i--) {
+            for(int j = i + 1; j < n ; j++) {
+                if(s.charAt(i) == s.charAt(j)) {
+                    memo[i][j] = memo[i+1][j-1];
+                } else {
+                    memo[i][j] = 1 + Math.min(memo[i+1][j], memo[i][j-1]);
+                }
+            }
+        }
+        return memo[0][n-1] <= k;
+    }
+
+//    Bottom up DP(1D); time: O(n^2), space: O(1)
+    public static boolean isValidPalindrome2(String s, int k) {
+        final int n = s.length();
+        int[] memo = new int[n];
+        int prev, temp;
+        for(int i = n - 2 ; i >= 0 ; i--) {
+//            store memo[i+1][j-1]
+            prev = 0;
+            for(int j = i + 1; j < n ; j++) {
+//                store memo[i+1][j]
+                temp = memo[j];
+                if(s.charAt(i) == s.charAt(j)) {
+                    memo[j] = prev;
+                } else {
+//                  memo[j] will contain the value for memo[i+1][j]
+//                  memo[j-1] will contain the value for memo[i][j-1]
+                    memo[j] = 1 + Math.min(memo[j], memo[j-1]);
+                }
+                prev = temp;
+            }
+        }
+        return memo[n-1] <= k;
     }
 }
 /*
