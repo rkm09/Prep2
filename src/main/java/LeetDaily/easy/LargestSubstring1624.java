@@ -8,10 +8,10 @@ public class LargestSubstring1624 {
     public static int maxLengthBetweenEqualCharacters(String s) {
         final int n = s.length();
         if(n < 2) return -1;
-        if(n == 2) {
-            return (s.charAt(0) == s.charAt(1)) ? 0 : -1;
-        }
         char[] carr = s.toCharArray();
+        if(n == 2) {
+            return (carr[0] == carr[1]) ? 0 : -1;
+        }
         int[] counts = new int[26];
         int res = Integer.MIN_VALUE;
         for(char c : carr) {
