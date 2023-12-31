@@ -19,7 +19,7 @@ public class LargestSubstring1624 {
         }
         for(int i = n - 1 ; i >= 0 ; i--) {
             if(counts[carr[i] - 'a'] > 1) {
-                res = Math.max(res, Math.abs(i - s.indexOf(carr[i])) - 1);
+                res = Math.max(res, i - s.indexOf(carr[i]) - 1);
             }
         }
         return res > 0 ? res : -1;
