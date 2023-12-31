@@ -1,10 +1,30 @@
 package LeetDaily.easy;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class LargestSubstring1624 {
     public static void main(String[] args) {
         String s = "abca";
-        System.out.println(maxLengthBetweenEqualCharacters(s));
+        System.out.println(maxLengthBetweenEqualCharacters1(s));
     }
+
+//    hashmap; time: O(n), space: O(1)
+    public static int maxLengthBetweenEqualCharacters1(String s) {
+        Map<Character, Integer> sub = new HashMap<>();
+        int ans = -1;
+        for(int i = 0 ; i < s.length() ; i++) {
+            char c = s.charAt(i);
+            if(sub.containsKey(c)) {
+                ans = Math.max(i - sub.get(c) - 1, ans);
+            } else {
+                sub.put(c, i);
+            }
+        }
+        return ans;
+    }
+
+//    [def]; time: O(n); space: O(1) [faster]
     public static int maxLengthBetweenEqualCharacters(String s) {
         final int n = s.length();
         if(n < 2) return -1;
@@ -13,7 +33,7 @@ public class LargestSubstring1624 {
             return (carr[0] == carr[1]) ? 0 : -1;
         }
         int[] counts = new int[26];
-        int res = Integer.MIN_VALUE;
+        int res = -1;
         for(char c : carr) {
             counts[c - 'a']++;
         }
@@ -22,7 +42,7 @@ public class LargestSubstring1624 {
                 res = Math.max(res, i - s.indexOf(carr[i]) - 1);
             }
         }
-        return res > 0 ? res : -1;
+        return res;
     }
 }
 
