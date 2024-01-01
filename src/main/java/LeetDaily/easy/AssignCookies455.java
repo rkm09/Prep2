@@ -5,19 +5,35 @@ import java.util.Arrays;
 public class AssignCookies455 {
     public static void main(String[] args) {
         int[] g = {1,2,3}; int[] s = {1,1};
-        System.out.println(findContentChildren(g,s));
+        System.out.println(findContentChildren1(g,s));
     }
+
+//    sorting; time: O(mlogm + nlogn), space: O(m+n)
+    public static int findContentChildren1(int[] g, int[] s) {
+        Arrays.sort(g);
+        Arrays.sort(s);
+        int contentChildren = 0, cookieIndex = 0;
+        while(contentChildren < g.length && cookieIndex < s.length) {
+            if(g[contentChildren] <= s[cookieIndex]) {
+                contentChildren++;
+            }
+            cookieIndex++;
+        }
+        return contentChildren;
+    }
+
+//    [def]; sorting; slower
     public static int findContentChildren(int[] g, int[] s) {
         int res = 0; final int m = s.length;
+        if(m == 0) return 0;
         Arrays.sort(g);
         Arrays.sort(s);
         int j = 0;
         for(int i = 0 ; i < g.length ; i++) {
             while(j < m) {
-                if(g[i] <= s[j]) {
-                    res++; j++; break;
+                if(g[i] <= s[j++]) {
+                    res++; break;
                 }
-                j++;
             }
         }
         return res;
