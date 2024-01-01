@@ -8,7 +8,8 @@ public class SingleNumberII137 {
         System.out.println(singleNumber3(nums));
     }
 
-//  Bit manipulation
+//  Bit manipulation; (add bit-by-bit for all bits and append)
+//    time: O(n), space: O(1)
     public static int singleNumber3(int[] nums) {
         int loner = 0;
         for(int shift = 0 ; shift < 32 ; shift++) {
