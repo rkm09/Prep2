@@ -10,8 +10,16 @@ public class SingleNumberII137 {
 
 //  Bit manipulation
     public static int singleNumber3(int[] nums) {
-
-        return -1;
+        int loner = 0;
+        for(int shift = 0 ; shift < 32 ; shift++) {
+            int bitSum = 0;
+            for(int num : nums) {
+                bitSum += (num >> shift) & 1;
+            }
+            int lonerBit = bitSum % 3;
+            loner |= (lonerBit << shift) ;
+        }
+        return loner;
     }
 
 //    [def] hashmap; time: O(n), space: O(n)
@@ -70,7 +78,7 @@ Each element in nums appears exactly three times except for one element which ap
 
 Bit Manipulation:
 
--- (A XOR B) = (A + B) MOD 2 [Modulo addition 2]
+-- (A XOR B) = (A + B) MOD 2 [Modulo addition 2] [bit by bit]
 -- Other properties of XOR:
     - A XOR 0 = A
     - A XOR A = 0
@@ -82,5 +90,10 @@ Bit Manipulation:
 -- XOR is a Modulo 2 operation
 -- In this example, we need a Modulo 3 operation;
 -- If we add all integers Modulo 3, then we will be left out with the integer which appears once.
-
+-- Adding all numbers and taking modulo is not the solution, instead addition of ith bit of all numbers will give
+   the ith bit of the loner;
+-- Getting the 0th bit of a number : num & 1
+     -- to get the ith bit: (num >> shift) & 1
+        (right shift will bring the ith bit to 0th position)
+     -- bitwise OR to shift back the loner bit at the right position
  */
