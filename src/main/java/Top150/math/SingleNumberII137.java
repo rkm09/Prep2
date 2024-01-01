@@ -5,11 +5,21 @@ import java.util.*;
 public class SingleNumberII137 {
     public static void main(String[] args) {
         int[] nums = {2,2,2,3,1,1,4,1,4,4};
-        System.out.println(singleNumber3(nums));
+        System.out.println(singleNumber4(nums));
+    }
+
+//    Bit Mask; time: O(n), space: O(1)
+    public static int singleNumber4(int[] nums) {
+        int seenOnce = 0, seenTwice = 0;
+        for(int num : nums) {
+            seenOnce = (seenOnce ^ num) & (~seenTwice);
+            seenTwice = (seenTwice ^ num) & (~seenOnce);
+        }
+        return seenOnce;
     }
 
 //  Bit manipulation; (add bit-by-bit for all bits and append)
-//    time: O(n), space: O(1)
+//    time: O(n), space: O(1) [range of integers must be known..can work for % k also]
     public static int singleNumber3(int[] nums) {
         int loner = 0;
         for(int shift = 0 ; shift < 32 ; shift++) {
@@ -78,7 +88,7 @@ Constraints:
 Each element in nums appears exactly three times except for one element which appears once.
 
 Bit Manipulation:
-
+Approach 1:
 -- (A XOR B) = (A + B) MOD 2 [Modulo addition 2] [bit by bit]
 -- Other properties of XOR:
     - A XOR 0 = A
@@ -97,4 +107,18 @@ Bit Manipulation:
      -- to get the ith bit: (num >> shift) & 1
         (right shift will bring the ith bit to 0th position)
      -- bitwise OR to shift back the loner bit at the right position
+
+Approach 2 : Bit Mask:
+
+-- A XOR B =  AB` + A`B
+-- Find a similar equation for bit mask mod 3
+-- Equation:
+    seenOnce:   (seenOnce XOR num) AND ( NOT seenTwice)
+    seenTwice:  (seenTwice XOR num) AND (NOT seenOnce)
+--  Approach:
+        -- If a bit appears once then add to seenOnce
+        -- If a bit appears a second time, remove from seenOnce and add to seenTwice
+        -- If a bit appears a third time, it should not be added to seenOnce as it must be present in seenTwice.
+           Also, remove it from seenTwice.
+
  */
