@@ -7,10 +7,25 @@ import java.util.*;
 public class FindMatrix2610 {
     public static void main(String[] args) {
         int[] nums = {1,3,4,1,2,3,1};
-        List<List<Integer>> res = findMatrix(nums);
+        List<List<Integer>> res = findMatrix1(nums);
         for(List<Integer> li : res) {
             System.out.println(li);
         }
+    }
+
+//    frequency counter; time: O(n), space: O(n)
+//    ps: could build the counter this way, 'coz of the constraint given
+    public static List<List<Integer>> findMatrix1(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        int[] freq = new int[nums.length + 1];
+        for(int num : nums) {
+            if(freq[num] >= res.size()) {
+                res.add(new ArrayList<>());
+            }
+            res.get(freq[num]).add(num);
+            freq[num]++;
+        }
+        return res;
     }
 
 //    [def]; hashmap; time: O(n^2), space: O(n)
