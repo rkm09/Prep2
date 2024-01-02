@@ -12,6 +12,8 @@ public class FindMatrix2610 {
             System.out.println(li);
         }
     }
+
+//    [def]; hashmap; time: O(n^2), space: O(n)
     public static List<List<Integer>> findMatrix(int[] nums) {
         Map<Integer, Integer> counts = new HashMap<>();
         int maxCount = 0;
@@ -30,7 +32,6 @@ public class FindMatrix2610 {
                 }
             }
             res.add(row);
-
         }
         return  res;
     }
