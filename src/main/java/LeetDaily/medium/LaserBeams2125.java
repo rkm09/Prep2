@@ -5,7 +5,27 @@ public class LaserBeams2125 {
         String[] bank = {"011001","000000","010100","001000"};
         System.out.println(numberOfBeams(bank));
     }
+
+//    time: O(m*n), space: O(1) where m is number of strings, n is the length of each string [faster]
     public static int numberOfBeams(String[] bank) {
+        int prev = 0, ans = 0;
+        for(String s : bank) {
+            int count = 0;
+            for(char c : s.toCharArray()) {
+                if(c == '1') {
+                    count++;
+                }
+            }
+            if(count > 0) {
+                ans += count * prev;
+                prev = count;
+            }
+        }
+        return ans;
+    }
+
+//    [def]; time: O(m*n); space: O(n)
+    public static int numberOfBeams1(String[] bank) {
         int m = bank.length;
         int[] counts = new int[m];
         int idx = 0;
