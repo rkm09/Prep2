@@ -2,15 +2,17 @@ package Top150.tree;
 
 import GenDS.TreeNode;
 
+import java.util.Stack;
+
 public class PathSum112 {
     public static void main(String[] args) {
         TreeNode left = new TreeNode(2);
         TreeNode right = new TreeNode(3);
         TreeNode root = new TreeNode(1, left, right);
         int target = 4;
-        System.out.println(hasPathSum(root, target));
+        System.out.println(hasPathSum1(root, target));
     }
-//    time: O(n), space: O(n) 
+//    time: O(n), space: O(n)
     public static boolean hasPathSum(TreeNode root, int targetSum) {
         if(root == null) return false;
         targetSum -= root.val;
@@ -19,6 +21,34 @@ public class PathSum112 {
         }
         return hasPathSum(root.left, targetSum) || hasPathSum(root.right, targetSum);
     }
+
+//    Iterative dfs; time: O(n), space: O(n)
+    public static boolean hasPathSum1(TreeNode root, int targetSum) {
+        if(root == null) {
+            return false;
+        }
+        Stack<TreeNode> nodeStack = new Stack<>();
+        Stack<Integer> sumStack = new Stack<>();
+        nodeStack.push(root);
+        sumStack.push(targetSum - root.val);
+        while(!nodeStack.isEmpty()) {
+            TreeNode node = nodeStack.pop();
+            int currSum = sumStack.pop();
+            if(node.left == null && node.right == null && currSum == 0) {
+                return true;
+            }
+            if(node.left != null) {
+                nodeStack.push(node.left);
+                sumStack.push(currSum - node.left.val);
+            }
+            if(node.right != null) {
+                nodeStack.push(node.right);
+                sumStack.push(currSum - node.right.val);
+            }
+        }
+        return false;
+    }
+
 }
 /*
 Given the root of a binary tree and an integer targetSum, return true if the tree has a root-to-leaf path such that adding up all the values along the path equals targetSum.
