@@ -23,7 +23,7 @@ public class AvgLevels637 {
         Queue<TreeNode> queue = new LinkedList<>();
         queue.offer(root);
         while(!queue.isEmpty()) {
-            int sum = 0, count = 0;
+            long sum = 0, count = 0;
             Queue<TreeNode> temp = new LinkedList<>();
             while(!queue.isEmpty()) {
                  TreeNode node = queue.poll();
