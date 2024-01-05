@@ -17,8 +17,35 @@ public class AvgLevels637 {
         System.out.println(averageOfLevels(root));
     }
 
-//    dfs; time: O(n), space: O(h) where h is the height of the tree
+//    bfs; time: O(n), space: O(m)
     public static List<Double> averageOfLevels(TreeNode root) {
+        List<Double> res = new ArrayList<>();
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while(!queue.isEmpty()) {
+            int sum = 0, count = 0;
+            Queue<TreeNode> temp = new LinkedList<>();
+            while(!queue.isEmpty()) {
+                 TreeNode node = queue.poll();
+                 sum += node.val;
+                 count++;
+                 if(node.left != null) {
+                     temp.offer(node.left);
+                 }
+                 if(node.right != null) {
+                     temp.offer(node.right);
+                 }
+            }
+//            transfer and process only one level at a time
+            queue = temp;
+            res.add(1.0 * sum / count);
+        }
+        return res;
+    }
+
+
+//    dfs; time: O(n), space: O(h) where h is the height of the tree
+    public static List<Double> averageOfLevels1(TreeNode root) {
         List<Double> res = new ArrayList<>();
         List<Integer> count = new ArrayList<>();
         average(root, 0, res, count);
