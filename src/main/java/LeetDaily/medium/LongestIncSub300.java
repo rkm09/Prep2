@@ -1,16 +1,37 @@
 package LeetDaily.medium;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class LongestIncSub300 {
     public static void main(String[] args) {
-        int[] nums = {10,9,2,5,3,7,101,18};
+        int[] nums = {5, 6, 7, 8, 1, 2, 3};
         System.out.println(lengthOfLIS(nums));
     }
 
-//    binary search (as elements within the list are sorted); time: O(nlogn), space: O(n)
+//    DP; time: O(n^2), spaceL O(1)
     public static int lengthOfLIS(int[] nums) {
+        final int n = nums.length;
+        int[] dp = new int[n];
+        Arrays.fill(dp, 1);
+        for(int i = 1 ; i < n ; i++) {
+            for(int j = 0 ; j < i ; j++) {
+                if(nums[i] > nums[j]) {
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                }
+            }
+        }
+        int longest = 0;
+        for(int num : dp) {
+            longest = Math.max(longest, num);
+        }
+        return longest;
+    }
+
+//    binary search (as elements within the list are sorted); time: O(nlogn), space: O(n)
+//    ps: this will lead to the right overall sub length (always), but the seq itself may not be right.
+    public static int lengthOfLIS1(int[] nums) {
         List<Integer> sub = new ArrayList<>();
         sub.add(nums[0]);
         for(int i = 1 ; i < nums.length ; i++) {
