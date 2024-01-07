@@ -7,14 +7,15 @@ import java.util.Map;
 public class ArithmeticSlicesII446 {
     public static void main(String[] args) {
         int[] nums = {1,1,2,3,4,5};
-        int[] nums1 = {1,1};
-        System.out.println(Arrays.toString(nums1));
-        System.out.println(numberOfArithmeticSlices(nums1));
+//        int[] nums1 = {1,1};
+        System.out.println(numberOfArithmeticSlices(nums));
     }
+
+//    DP; time: O(n^2), space: O(n)
     public static int numberOfArithmeticSlices(int[] nums) {
         final int n = nums.length;
-        long ans = 0;
         Map<Integer, Integer>[] cnt = new Map[n];
+        int ans = 0;
         for(int i = 0 ; i < n ; i++) {
             cnt[i] = new HashMap<>(i);
             for(int j = 0 ; j < i ; j++) {
@@ -25,12 +26,11 @@ public class ArithmeticSlicesII446 {
                 int diff = (int) delta;
                 int sum = cnt[j].getOrDefault(diff, 0);
                 int origin = cnt[i].getOrDefault(diff, 0);
-                cnt[i].put(diff, origin + sum + 1);
+                cnt[i].put(diff, sum + origin + 1);
                 ans += sum;
             }
         }
-        System.out.println(Arrays.toString(cnt));
-        return (int) ans;
+        return ans;
     }
 }
 
@@ -60,4 +60,23 @@ Explanation: Any subsequence of this array is arithmetic.
 Constraints:
 1  <= nums.length <= 1000
 -231 <= nums[i] <= 231 - 1
+
+We can define weak arithmetic subsequences as follows:
+Weak arithmetic subsequences are subsequences that consist of at least two elements and if the difference between any two consecutive elements is the same.
+There are two properties of weak arithmetic subsequences that are very useful:
+- For any pair i, j (i != j), A[i] and A[j] can always form a weak arithmetic subsequence.
+- If we can append a new element to a weak arithmetic subsequence and keep it arithmetic, then the new subsequence must be an arithmetic subsequence.
+
+The second property is quite trivial, because the only difference between arithmetic subsequences and weak arithmetic subsequences is their length.
+
+Thus, we can change the state representations accordingly:
+
+f[i][d] denotes the number of weak arithmetic subsequences that ends with A[i] and its common difference is d.
+
+Now the state transitions are quite straightforward:
+
+for all j < i, f[i][A[i] - A[j]] += (f[j][A[i] - A[j]] + 1).
+how can we get the number of arithmetic subsequences that are not weak?
+Based on property two, when we are appending new elements to existing weak arithmetic subsequences, we are forming arithmetic subsequences. So the first part, f[j][A[i] - A[j]] is the number of new formed arithmetic subsequences, and can be added to the answer.
+
  */
