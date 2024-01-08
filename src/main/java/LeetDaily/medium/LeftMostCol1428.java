@@ -12,7 +12,7 @@ public class LeftMostCol1428 {
         System.out.println(leftMostColumnWithOne(bin));
     }
 
-//    approach: start top right, move only left and down ;time: O(n), space: O(1)
+//    approach: start top right, move only left and down ;time: O(n+m), space: O(1); n rows, m cols
     public static int leftMostColumnWithOne(BinaryMatrix binaryMatrix) {
         int rows = binaryMatrix.dimensions().get(0);
         int cols = binaryMatrix.dimensions().get(1);
@@ -25,6 +25,29 @@ public class LeftMostCol1428 {
             }
         }
         return currentCol == cols - 1 ? -1 : currentCol + 1;
+    }
+
+//    binary search; time: O(nlogn), space: O(1)
+    public static int leftMostColumnWithOne1(BinaryMatrix binaryMatrix) {
+        int rows = binaryMatrix.dimensions().get(0);
+        int cols = binaryMatrix.dimensions().get(1);
+        int smallestIndex = cols;
+        for(int row = 0 ; row < rows ; row++) {
+            int low = 0;
+            int high = cols - 1;
+            while(low < high) {
+                int mid = low + (high - low) / 2;
+                if(binaryMatrix.get(row, mid) == 0) {
+                    low = mid + 1;
+                } else {
+                    high = mid;
+                }
+            }
+            if(binaryMatrix.get(row, low) == 1) {
+                smallestIndex = Math.min(smallestIndex, low);
+            }
+        }
+        return smallestIndex == cols ? -1 : smallestIndex  ;
     }
 
 //  [def];  Too many calls; TLE
