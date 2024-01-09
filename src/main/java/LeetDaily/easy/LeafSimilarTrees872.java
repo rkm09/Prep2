@@ -4,6 +4,7 @@ import GenDS.TreeNode;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class LeafSimilarTrees872 {
     public static void main(String[] args) {
@@ -11,10 +12,10 @@ public class LeafSimilarTrees872 {
         TreeNode right = new TreeNode(3);
         TreeNode root1 = new TreeNode(1, left, right);
         TreeNode root2 = new TreeNode(1, right, left);
-        System.out.println(leafSimilar(root1, root2));
+        System.out.println(leafSimilar1(root1, root2));
     }
 
-//    [def]; recursive dfs; time: O(n), space: O(n)
+//    [def]; recursive dfs; time: O(n+m), space: O(n+m), where n & m are the length of the trees; faster;
     public static boolean leafSimilar(TreeNode root1, TreeNode root2) {
         List<Integer> leaves1 = new ArrayList<>();
         List<Integer> leaves2 = new ArrayList<>();
@@ -30,6 +31,30 @@ public class LeafSimilarTrees872 {
             }
             helper(node.left, leaves);
             helper(node.right, leaves);
+        }
+    }
+
+//    [def]; iterative; time: O(n), space: O(n)
+    public static boolean leafSimilar1(TreeNode root1, TreeNode root2) {
+        List<Integer> leaves1 = new ArrayList<>();
+        List<Integer> leaves2 = new ArrayList<>();
+        dfs(root1, leaves1);
+        dfs(root2, leaves2);
+        return leaves1.equals(leaves2);
+    }
+    private static void dfs(TreeNode root, List<Integer> leaves) {
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+        while(!stack.isEmpty()) {
+            TreeNode node = stack.pop();
+            if(node != null) {
+                if(node.left == null && node.right == null) {
+                    leaves.add(node.val);
+                } else {
+                    stack.push(node.left);
+                    stack.push(node.right);
+                }
+            }
         }
     }
 }
