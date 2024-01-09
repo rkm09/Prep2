@@ -30,6 +30,7 @@ public class SortedArrayToBST108 {
     private static TreeNode helper1(int[] nums, int left, int right) {
         if(left > right) return null;
         int mid = left + (right - left) / 2;
+//        this actually represents an even length with 2 mid choices as right is n-1 and not an n.
         if((left + right) % 2 == 1) mid++;
         TreeNode root = new TreeNode(nums[mid]);
         root.left = helper(nums, left, mid - 1);
