@@ -8,23 +8,25 @@ public class ZigZagConversion6 {
         String s = "PAYPALISHIRING"; int numRows = 3;
         System.out.println(convert(s, numRows));
     }
+
+//    String traversal; time: O(n), space: O(1)
     public static String convert(String s, int numRows) {
-        final int n = s.length();
+        if(numRows == 1) return s;
+        int n = s.length();
         StringBuilder sb = new StringBuilder();
-        char[][] grid = new char[numRows][n];
-        char[] carr = s.toCharArray();
-        int k = 0;
-        for(int r = 0 ; r < numRows ; r++) {
-            int c = r;
-            while(c < n) {
-                grid[r][c] = carr[c];
-                c = c + numRows;
-                k++;
-            }
-        }
-        for(int r = 0 ; r < numRows ; r++) {
-            for(int c = 0 ; c < k ; c++) {
-                sb.append(grid[r][c]);
+        int charsInSection = 2 * (numRows - 1);
+        for(int currRow = 0 ; currRow < numRows ; currRow++) {
+            int index = currRow;
+            while(index < n) {
+               sb.append(s.charAt(index));
+               if(currRow != 0  && currRow != numRows - 1) {
+                   int charsInBetween = charsInSection - 2 * currRow;
+                   int secondIndex = index + charsInBetween;
+                   if(secondIndex < n) {
+                       sb.append(s.charAt(secondIndex));
+                   }
+               }
+               index += charsInSection;
             }
         }
         return sb.toString();
