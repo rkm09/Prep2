@@ -21,6 +21,7 @@ public class AmtOfTime2385 {
     }
 
 //    dfs; one pass; time: O(n), space: O(n)
+//    as if 'start' is the root;
     public static int amountOfTime(TreeNode root, int start) {
         traverse(root, start);
         return maxDistance;
