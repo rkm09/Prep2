@@ -5,16 +5,54 @@ import GenDS.TreeNode;
 import java.util.*;
 
 public class AmtOfTime2385 {
-//    static int time = 0;
+    private static int maxDistance;
     public static void main(String[] args) {
-        TreeNode left1 = new TreeNode(4);
-        TreeNode left2 = new TreeNode(5);
-        TreeNode left = new TreeNode(2, left1, left2);
-        TreeNode right = new TreeNode(3);
+        TreeNode left111 = new TreeNode(5);
+        TreeNode left11 = new TreeNode(4, left111, null);
+        TreeNode left1 = new TreeNode(3, left11, null);
+        TreeNode left2 = new TreeNode(10);
+        TreeNode left = new TreeNode(2, left1, null);
+        TreeNode right21 = new TreeNode(9);
+        TreeNode right22 = new TreeNode(2);
+        TreeNode right2 = new TreeNode(4, right21, right22);
+        TreeNode right = new TreeNode(6, null, null);
         TreeNode root = new TreeNode(1, left, right);
-        System.out.println(amountOfTime(root, 3));
+        System.out.println(amountOfTime(root, 2));
     }
+
+//    dfs; one pass; time: O(n), space: O(n)
     public static int amountOfTime(TreeNode root, int start) {
+        traverse(root, start);
+        return maxDistance;
+    }
+    private static int traverse(TreeNode root, int start) {
+        int depth = 0;
+        if(root == null) {
+            return depth;
+        }
+        int leftDepth = traverse(root.left, start);
+        int rightDepth = traverse(root.right, start);
+
+        if(root.val == start) {
+//          to signify 'start' node
+            maxDistance = Math.max(leftDepth, rightDepth);
+            depth = -1;
+        } else if(leftDepth >= 0 && rightDepth >= 0) {
+//           no 'start' node in this subtree
+            depth = Math.max(leftDepth, rightDepth) + 1;
+        } else {
+//           this subtree contains 'start' node somewhere
+            int distance = Math.abs(leftDepth) + Math.abs(rightDepth);
+            maxDistance = Math.max(maxDistance, distance);
+//            to continue 'start' node consideration
+            depth = Math.min(leftDepth, rightDepth) - 1;
+        }
+        return depth;
+    }
+
+//    time: O(n), space: O(n)
+//    bfs after conversion to undirected graph. both cost O(n)
+    public static int amountOfTime1(TreeNode root, int start) {
         Map<Integer, Set<Integer>> map = new HashMap<>();
         convert(root, 0, map);
         Queue<Integer> queue = new LinkedList<>();
