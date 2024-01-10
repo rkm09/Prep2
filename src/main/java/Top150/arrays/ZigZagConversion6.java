@@ -1,12 +1,13 @@
 package Top150.arrays;
 
-import java.util.ArrayList;
-import java.util.List;
+
+import java.util.Arrays;
+
 
 public class ZigZagConversion6 {
     public static void main(String[] args) {
         String s = "PAYPALISHIRING"; int numRows = 3;
-        System.out.println(convert(s, numRows));
+        System.out.println(convert1(s, numRows));
     }
 
 //    String traversal; time: O(n), space: O(1)
@@ -27,6 +28,42 @@ public class ZigZagConversion6 {
                    }
                }
                index += charsInSection;
+            }
+        }
+        return sb.toString();
+    }
+
+//    simulate zigzag; time: O(numRows * n), space: O(numRows * n)
+    public static String convert1(String s, int numRows) {
+        if(numRows == 1) return s;
+        int n = s.length();
+        int section = (int) Math.ceil(n / (2 * numRows - 2.0));
+        int numCols = section * (numRows - 1);
+        char[][] grid = new char[numRows][numCols];
+        for(char[] row: grid) {
+            Arrays.fill(row, ' ');
+        }
+        int currRow = 0, currCol = 0, currStringIndex = 0;
+        while(currStringIndex < n) {
+//            move down
+            while(currRow < numRows && currStringIndex < n) {
+                grid[currRow++][currCol] = s.charAt(currStringIndex++);
+            }
+
+            currRow -= 2;
+            currCol++;
+
+//            move up and side
+            while(currRow > 0 && currCol < numCols && currStringIndex < n) {
+                grid[currRow--][currCol++] = s.charAt(currStringIndex++);
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        for(char[] row : grid) {
+            for(char c : row) {
+                if(c != ' ') {
+                    sb.append(c);
+                }
             }
         }
         return sb.toString();
