@@ -40,7 +40,6 @@ public class MaxAncestorDiff1026 {
         return result;
     }
     private static void helper1(TreeNode node, int currMax, int currMin) {
-//        it's a leaf, compute
         if(node == null) {
             return;
         }
