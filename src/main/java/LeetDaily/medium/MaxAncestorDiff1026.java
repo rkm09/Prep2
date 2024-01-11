@@ -4,6 +4,7 @@ import GenDS.TreeNode;
 
 
 public class MaxAncestorDiff1026 {
+    static int result;
     public static void main(String[] args) {
         TreeNode right11 = new TreeNode(3);
         TreeNode right1 = new TreeNode(0, right11, null);
@@ -13,6 +14,7 @@ public class MaxAncestorDiff1026 {
     }
 
 //    recursion; time: O(n), space: O(n)
+//    insight: given any two nodes on the same root to leaf path, they must have the same ancestral relation
     public static int maxAncestorDiff(TreeNode root) {
         if(root == null) return 0;
         return helper(root, root.val, root.val);
@@ -27,6 +29,27 @@ public class MaxAncestorDiff1026 {
         int left = helper(node.left, currMax, currMin);
         int right = helper(node.right, currMax, currMin);
         return Math.max(left, right);
+    }
+
+
+//    basic recursion; time: O(n), space: O(n)
+    public static int maxAncestorDiff1(TreeNode root) {
+        if(root == null) return 0;
+        result = 0;
+        helper1(root, root.val, root.val);
+        return result;
+    }
+    private static void helper1(TreeNode node, int currMax, int currMin) {
+//        it's a leaf, compute
+        if(node == null) {
+            return;
+        }
+        int possibleResult = Math.max(Math.abs(currMax - node.val), Math.abs(node.val - currMin));
+        result = Math.max(possibleResult, result);
+        currMax = Math.max(node.val, currMax);
+        currMin = Math.min(node.val, currMin);
+        helper1(node.left, currMax, currMin);
+        helper1(node.right, currMax, currMin);
     }
 }
 
