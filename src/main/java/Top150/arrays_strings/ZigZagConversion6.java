@@ -1,4 +1,4 @@
-package Top150.arrays;
+package Top150.arrays_strings;
 
 
 import java.util.Arrays;

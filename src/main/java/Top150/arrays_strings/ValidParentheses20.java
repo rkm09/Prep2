@@ -1,10 +1,10 @@
-package Top150.arrays;
+package Top150.arrays_strings;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-public class ValidParenthesis20 {
+public class ValidParentheses20 {
     public static void main(String[] args) {
         String s = "()";
         System.out.println(isValid2(s));
