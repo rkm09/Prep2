@@ -3,10 +3,11 @@ package Top150.arrays_strings;
 import java.util.Arrays;
 
 public class CanJumpI55 {
+    private static Index[] memo;
     public static void main(String[] args) {
 //        int[] nums = {2,3,1,1,4};
         int[] nums = {2,5,0,0};
-        System.out.println(canJump2(nums));
+        System.out.println(canJump(nums));
     }
 
 //    greedy(like a constant space bottom up dp); time: O(n), space: O(1); fastest;
@@ -42,7 +43,7 @@ public class CanJumpI55 {
         GOOD, BAD, UNKNOWN
     }
 
-    //        another using enum; bottom up dp; time: O(n^2), space: O(n)
+    //   another using enum; bottom up dp; time: O(n^2), space: O(n)
     public static boolean canJump3(int[] nums) {
         int n = nums.length;
         Index[] dp = new Index[n];
@@ -62,8 +63,33 @@ public class CanJumpI55 {
         return dp[0] == Index.GOOD;
     }
 
+//    top down dp; recursive; time: O(n^2), space: O(n)
+    public static boolean canJump4(int[] nums) {
+        int n = nums.length;
+        memo = new Index[n];
+        for(int i = 0 ; i < n ; i++) {
+            memo[i] = Index.UNKNOWN;
+        }
+        memo[n-1] = Index.GOOD;
+        return canJumpFromPosition(nums, 0);
+    }
+    private static boolean canJumpFromPosition(int[] nums, int position) {
+        if(memo[position] != Index.UNKNOWN) {
+            return memo[position] == Index.GOOD ? true : false;
+        }
+        int furthest = Math.min(position + nums[position], nums.length - 1);
+        for(int nextPosition = position + 1 ; nextPosition <= furthest ; nextPosition++) {
+            if(canJumpFromPosition(nums, nextPosition)) {
+                memo[position] = Index.GOOD;
+                return true;
+            }
+        }
+        memo[position] = Index.BAD;
+        return false;
+    }
 
-    //    [def]; bottom up dp; time: O(n^2), space: O(n)
+
+    //    [def]; bottom up dp; time: O(n^2), space: O(n); better than top down
     public static boolean canJump1(int[] nums) {
         int n = nums.length;
         boolean[] dp = new boolean[n];
