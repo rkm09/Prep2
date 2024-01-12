@@ -5,7 +5,25 @@ public class HalvesAreAlike1704 {
         String s = "book";
         System.out.println(halvesAreAlike(s));
     }
+
+//    using indexOf; time: O(n), space: O(1)
     public static boolean halvesAreAlike(String s) {
+        int n = s.length();
+        return countVowel(0, n/2, s) == countVowel(n/2, n, s);
+    }
+    private static int countVowel(int start, int end, String s) {
+        int count = 0;
+        String vowels = "aeiouAEIOU";
+        for(int i = start; i < end ; i++) {
+            if(vowels.indexOf(s.charAt(i)) != -1) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+//    [def]; using switch; time: O(n), space: O(1)
+    public static boolean halvesAreAlike1(String s) {
         int left = 0, right = s.length() - 1;
         int countLeft = 0, countRight = 0;
         while(left < right) {
