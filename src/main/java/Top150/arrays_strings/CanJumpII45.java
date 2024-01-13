@@ -6,10 +6,24 @@ public class CanJumpII45 {
     static int[] memo;
     public static void main(String[] args) {
         int[] nums  = {2,3,0,1,4};
-        System.out.println(jump2(nums));
+        System.out.println(jump(nums));
     }
 
-//    bottom up dp; time : O(n^2), space: O(n)
+//    greedy; time: O(n), space: O(1); fastest;
+    public static int jump(int[] nums) {
+        int n = nums.length, ans = 0;
+        int currEnd = 0, currFar = 0;
+        for(int i = 0 ; i < n - 1 ; i++) {
+           currFar = Math.max(currFar, i + nums[i]);
+           if(i == currEnd) {
+               ans++;
+               currEnd = currFar;
+           }
+        }
+        return ans;
+    }
+
+//    [def]; bottom up dp; time : O(n^2), space: O(n)
     public static int jump1(int[] nums) {
         int n = nums.length;
         int[] dp = new int[n];
@@ -26,7 +40,7 @@ public class CanJumpII45 {
         return dp[0];
     }
 
-//    top down dp; time: O(n^2), space: O(n)
+//    [def]; top down dp; time: O(n^2), space: O(n)
     public static int jump2(int[] nums) {
         int n = nums.length;
         memo = new int[n];
