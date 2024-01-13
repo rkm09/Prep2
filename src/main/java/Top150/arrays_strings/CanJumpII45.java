@@ -15,7 +15,9 @@ public class CanJumpII45 {
         int n = nums.length, ans = 0;
         int currEnd = 0, currFar = 0;
         for(int i = 0 ; i < n - 1 ; i++) {
+//            update the farthest reachable index in scope
            currFar = Math.max(currFar, i + nums[i]);
+//           if we reach the starting range (end) of this jump, move on to the starting range of the next jump
            if(i == currEnd) {
                ans++;
                currEnd = currFar;
