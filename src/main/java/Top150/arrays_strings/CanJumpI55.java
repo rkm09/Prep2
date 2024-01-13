@@ -10,7 +10,7 @@ public class CanJumpI55 {
         System.out.println(canJump(nums));
     }
 
-//    greedy(like a constant space bottom up dp); time: O(n), space: O(1); fastest;
+//    greedy; time: O(n), space: O(1); fastest;
     public static boolean canJump(int[] nums) {
         int n = nums.length;
         int lastPos = n - 1;
