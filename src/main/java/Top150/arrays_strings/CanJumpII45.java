@@ -10,6 +10,7 @@ public class CanJumpII45 {
     }
 
 //    greedy; time: O(n), space: O(1); fastest;
+//    given constraint: that input has a valid jump
     public static int jump(int[] nums) {
         int n = nums.length, ans = 0;
         int currEnd = 0, currFar = 0;
