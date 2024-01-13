@@ -8,7 +8,23 @@ public class MinSteps1347 {
         String s = "leetcode"; String t = "practise";
         System.out.println(minSteps(s, t));
     }
+
+//    count sort; time: O(n), space: O(1); faster;
     public static int minSteps(String s, String t) {
+        int[] count = new int[26];
+        for(int i = 0 ; i < s.length() ; i++) {
+            count[t.charAt(i) - 'a']++;
+            count[s.charAt(i) - 'a']--;
+        }
+        int ans = 0;
+        for(int i = 0 ; i < 26 ; i++) {
+            ans += Math.max(0, count[i]);
+        }
+        return ans;
+    }
+
+//    [def]; hashmap; time: O(n), space: O(n)
+    public static int minSteps1(String s, String t) {
         int count = 0;
         Map<Character, Integer> smap = new HashMap<>();
         for(int i = 0 ; i < s.length() ; i++) {
