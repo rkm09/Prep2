@@ -5,9 +5,59 @@ import java.util.*;
 public class CloseStrings1657 {
     public static void main(String[] args) {
         String word1 = "uau"; String word2 = "ssx";
-        System.out.println(closeStrings(word1, word2));
+        System.out.println(closeStrings1(word1, word2));
     }
-    public static boolean closeStrings(String word1, String word2) {
+
+//    count freq; time: O(n), space: O(1) [sorting for constant length, so 26log26 can be ignored]; faster;
+    public static boolean closeStrings1(String word1, String word2) {
+        if(word1.length() != word2.length()) {
+            return false;
+        }
+        int[] wordMap1 = new int[26];
+        int[] wordMap2 = new int[26];
+        for(char c : word1.toCharArray()) {
+            wordMap1[c - 'a']++;
+        }
+        for(char c : word2.toCharArray()) {
+            wordMap2[c - 'a']++;
+        }
+        for(int i = 0 ; i < 26 ; i++) {
+            if((wordMap1[i] == 0 && wordMap2[i] > 0) ||
+                    (wordMap2[i] == 0 && wordMap1[i] > 0)) {
+                return false;
+            }
+        }
+
+        Arrays.sort(wordMap1);
+        Arrays.sort(wordMap2);
+        return Arrays.equals(wordMap1, wordMap2);
+    }
+
+//    hashmap; time: O(n) (since the sort count is constant); space: O(1)
+    public static boolean closeStrings2(String word1, String word2) {
+        if(word1.length() != word2.length()) {
+            return false;
+        }
+        Map<Character, Integer> count1 = new HashMap<>();
+        Map<Character, Integer> count2 = new HashMap<>();
+        for(char c : word1.toCharArray()) {
+            count1.put(c, count1.getOrDefault(c, 0) + 1);
+        }
+        for(char c : word2.toCharArray()) {
+            count2.put(c, count2.getOrDefault(c, 0) + 1);
+        }
+        if(!count1.keySet().equals(count2.keySet())) {
+            return false;
+        }
+        List<Integer> freqList1 = new ArrayList<>(count1.values());
+        List<Integer> freqList2 = new ArrayList<>(count2.values());
+        Collections.sort(freqList1);
+        Collections.sort(freqList2);
+        return freqList1.equals(freqList2);
+    }
+
+//    [def]; faster than hashmap approach;
+    public static boolean closeStringsN(String word1, String word2) {
         if(word1.length() != word2.length()) return false;
         Set<Character> set1 = new HashSet<>();
         Set<Character> set2 = new HashSet<>();
