@@ -17,16 +17,12 @@ public class SumRootToLeaf129 {
         li = new ArrayList<>();
         int sum = 0;
         dfs(root, "");
-        System.out.println(li);
         for(String num : li) {
             sum += Integer.parseInt(num);
         }
         return sum;
     }
     private static void dfs(TreeNode node, String num) {
-        if(node == null) {
-            li.add(num);
-        }
         if(node != null) {
             num += node.val;
             if(node.left == null && node.right == null) {
