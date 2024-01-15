@@ -7,6 +7,8 @@ public class FindWinners2225 {
         int[][] matches = {{1,3},{2,3},{3,6},{5,6},{5,7},{4,5},{4,8},{4,9},{10,4},{10,9}};
         System.out.println(findWinners(matches));
     }
+
+//    [def]; hashmap; time: O(nlogn), space: O(n)
     public static List<List<Integer>> findWinners(int[][] matches) {
         List<List<Integer>> answer = new ArrayList<>();
         List<Integer> allWin = new ArrayList<>();
