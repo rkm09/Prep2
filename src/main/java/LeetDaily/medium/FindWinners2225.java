@@ -5,11 +5,116 @@ import java.util.*;
 public class FindWinners2225 {
     public static void main(String[] args) {
         int[][] matches = {{1,3},{2,3},{3,6},{5,6},{5,7},{4,5},{4,8},{4,9},{10,4},{10,9}};
-        System.out.println(findWinners(matches));
+        System.out.println(findWinners1(matches));
     }
 
-//    [def]; hashmap; time: O(nlogn), space: O(n)
+//    counting sort (linear); time: O(n + k), space: O(k) [n: size of the input array, k: range of values in winner/loser]
+//   constraint given of 10^5 for both match length & value type ; [fastest]
     public static List<List<Integer>> findWinners(int[][] matches) {
+        int[] lossCount = new int[100001];
+        Arrays.fill(lossCount, -1);
+        for(int[] match : matches) {
+            int winner = match[0];
+            int loser = match[1];
+            if(lossCount[winner] == -1) {
+                lossCount[winner] = 0;
+            }
+            if(lossCount[loser] == -1) {
+                lossCount[loser] = 1;
+            } else {
+                lossCount[loser]++;
+            }
+        }
+        List<List<Integer>> answer = Arrays.asList(new ArrayList<>(), new ArrayList<>());
+        for(int i = 1 ; i < 100001 ; i++) {
+            if(lossCount[i] == 0) {
+                answer.get(0).add(i);
+            } else if(lossCount[i] == 1) {
+                answer.get(1).add(i);
+            }
+        }
+        return answer;
+    }
+
+//    hashmap; time: O(nlogn), space: O(n)
+    public static List<List<Integer>> findWinners1(int[][] matches) {
+          Map<Integer, Integer> lossCount = new HashMap<>();
+          for(int[] match : matches) {
+              int winner = match[0];
+              int loser = match[1];
+              lossCount.put(winner, lossCount.getOrDefault(winner, 0));
+              lossCount.put(loser, lossCount.getOrDefault(loser, 0) + 1);
+          }
+          List<List<Integer>> answer = Arrays.asList(new ArrayList<>(), new ArrayList<>());
+          for(int key : lossCount.keySet()) {
+              if(lossCount.get(key) == 0) {
+                  answer.get(0).add(key);
+              } else if(lossCount.get(key) == 1) {
+                  answer.get(1).add(key);
+              }
+          }
+          Collections.sort(answer.get(0));
+          Collections.sort(answer.get(1));
+          return answer;
+    }
+
+//    hashset; time: O(nlogn), space: O(n)
+    public static List<List<Integer>> findWinners2(int[][] matches) {
+        Set<Integer> zeroLoss = new HashSet<>();
+        Set<Integer> oneLoss = new HashSet<>();
+        Set<Integer> moreLosses = new HashSet<>();
+        for(int[] match : matches) {
+            int winner = match[0];
+            int loser = match[1];
+            if(!oneLoss.contains(winner) && !moreLosses.contains(winner)) {
+                zeroLoss.add(winner);
+            }
+            if(zeroLoss.contains(loser)) {
+                zeroLoss.remove(loser);
+                oneLoss.add(loser);
+            }else if(oneLoss.contains(loser)) {
+                oneLoss.remove(loser);
+                moreLosses.add(loser);
+            } else if(moreLosses.contains(loser)) {
+                continue;
+            } else {
+                oneLoss.add(loser);
+            }
+        }
+        List<List<Integer>> answer = Arrays.asList(new ArrayList<>(), new ArrayList<>());
+        answer.get(0).addAll(zeroLoss);
+        answer.get(1).addAll(oneLoss);
+        Collections.sort(answer.get(0));
+        Collections.sort(answer.get(1));
+        return answer;
+    }
+
+//    hashmap + hashset; time: O(nlogn), space: O(n)
+    public static List<List<Integer>> findWinners3(int[][] matches) {
+        List<List<Integer>> answer = Arrays.asList(new ArrayList<>(), new ArrayList<>());
+        Map<Integer, Integer> loseMap = new HashMap<>();
+        Set<Integer> seen = new HashSet<>();
+        for(int[] nums : matches) {
+            int winner = nums[0];
+            int loser = nums[1];
+            seen.add(winner);
+            seen.add(loser);
+            loseMap.put(loser, loseMap.getOrDefault(loser, 0) + 1);
+        }
+        for(int key : seen) {
+            if(!loseMap.containsKey(key)) {
+                answer.get(0).add(key);
+            } else if(loseMap.get(key) == 1) {
+                answer.get(1).add(key);
+            }
+        }
+        Collections.sort(answer.get(0));
+        Collections.sort(answer.get(1));
+        return answer;
+    }
+
+//    [def]; hashmap + hashset; time: O(nlogn), space: O(n) [faster than editorial except array approach]
+    public static List<List<Integer>> findWinnersN(int[][] matches) {
         List<List<Integer>> answer = new ArrayList<>();
         List<Integer> allWin = new ArrayList<>();
         List<Integer> oneLoss = new ArrayList<>();
