@@ -1,12 +1,30 @@
 package LeetDaily.easy;
 
+import java.util.Arrays;
+
 public class CalculateTime1165 {
     public static void main(String[] args) {
-        String keyboard = "abcdefghijklmnopqrstuvwxyz";
-        String word = "cba";
+        String keyboard = "pqrstuvwxyzabcdefghijklmno";
+        String word = "leetcode";
         System.out.println(calculateTime(keyboard, word));
     }
+
+//    count sort; time: O(n), space: O(1)
     public static int calculateTime(String keyboard, String word) {
+        int[] keyIndices = new int[26];
+        int prev = 0, ans = 0;
+        for(int i = 0 ; i < keyboard.length() ; i++) {
+            keyIndices[keyboard.charAt(i) - 'a'] = i;
+        }
+        for(char c : word.toCharArray()) {
+            ans += Math.abs(prev - keyIndices[c - 'a']);
+            prev = keyIndices[c - 'a'];
+        }
+        return ans;
+    }
+
+//    [def]; time: O(n), space: O(1)
+    public static int calculateTime1(String keyboard, String word) {
         int time = 0;
         int prevIdx = 0; int currIdx = 0;
         for(char c : word.toCharArray()) {
