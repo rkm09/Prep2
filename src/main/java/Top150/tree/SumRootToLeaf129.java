@@ -17,7 +17,7 @@ public class SumRootToLeaf129 {
         System.out.println(sumNumbers(root));
     }
 
-//    iterative dfs; time: O(n), space: O(h) where h is the height; fast; 
+//    iterative dfs; time: O(n), space: O(h) where h is the height; fast;
     public static int sumNumbers(TreeNode root) {
         Deque<Pair<TreeNode, Integer>> stack = new ArrayDeque<>();
         int currNum, rootToLeaf = 0;
