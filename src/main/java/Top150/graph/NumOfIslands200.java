@@ -171,7 +171,7 @@ public class NumOfIslands200 {
         }
         return uf.getCount();
     }
-    
+
 }
 
 /*
