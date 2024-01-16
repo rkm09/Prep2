@@ -10,7 +10,7 @@ public class NumOfIslands200 {
         System.out.println(islands.numIslands(grid));
     }
 
-    //    dfs; time: O(m*n), space: O(m*n); faster
+    //    dfs; time: O(m*n), space: O(m*n); fastest
     public  int numIslands1(char[][] grid) {
         if(grid == null || grid.length == 0) {
             return 0;
