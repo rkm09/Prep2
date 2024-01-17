@@ -14,8 +14,53 @@ public class RedundantConnection684 {
         System.out.println(Arrays.toString(red.findRedundantConnection(edges)));
     }
 
-//    dfs; time: O(n^2)[for every edge check all neighbours], space: O(n)
+//    Disjoint set (Union find) data structure; faster;
+//    time: O(N*alpha(N)) ~~ O(N), space: O(N) [where alpha is the inverse ackermann function]
     public int[] findRedundantConnection(int[][] edges) {
+        DSU dsu = new DSU(MAX_EDGE_VAL + 1);
+        for(int[] edge : edges) {
+            if(!dsu.union(edge[0], edge[1])) {
+                return edge;
+            }
+        }
+        throw new AssertionError();
+    }
+
+    class DSU {
+        int[] parent;
+        int[] rank;
+        public DSU(int size) {
+            parent = new int[size];
+            rank = new int[size];
+            for(int i = 0 ; i < size ; i++){
+                parent[i] = i;
+            }
+        }
+        public int find(int x) {
+            if(parent[x] != x) {
+                parent[x] = find(parent[x]);
+            }
+            return parent[x];
+        }
+        public boolean union(int x, int y) {
+            int rootX = find(x);
+            int rootY = find(y);
+            if(rootX == rootY) {
+                return false;
+            } else if(rank[rootX] > rank[rootY]) {
+                    parent[rootY] = rootX;
+            } else if(rank[rootX] < rank[rootY]) {
+                    parent[rootX] = rootY;
+            } else {
+                    parent[rootY] = rootX;
+                    rank[rootX]++;
+            }
+            return true;
+        }
+    }
+
+    //    dfs; time: O(n^2)[for every edge check all neighbours], space: O(n)
+    public int[] findRedundantConnection1(int[][] edges) {
         ArrayList<Integer>[] graph = new ArrayList[MAX_EDGE_VAL + 1];
         for(int i = 0 ; i <= MAX_EDGE_VAL ; i++) {
             graph[i] = new ArrayList<>();
@@ -45,7 +90,6 @@ public class RedundantConnection684 {
         }
         return false;
     }
-
 }
 
 /*
