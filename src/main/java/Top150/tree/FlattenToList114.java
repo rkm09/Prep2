@@ -84,7 +84,7 @@ public class FlattenToList114 {
 
 //    time: O(n), space: O(1)
 //    constant space (like morris traversal);
-//    unlike recursion we don't wait till we process the left and right subtrees entirely, we rather rewire the connections on the fly;
+//    unlike recursion we don't wait till we process the left and right subtrees entirely first; we rather rewire the connections on the fly;
     public static void flatten2(TreeNode root) {
         if(root == null) {
             return;
