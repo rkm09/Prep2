@@ -1,5 +1,6 @@
 package Top150.tree;
 
+import GenDS.Pair;
 import GenDS.TreeNode;
 
 import java.util.Stack;
@@ -15,7 +16,7 @@ public class FlattenToList114 {
         TreeNode root = new TreeNode(1, left, right);
     }
 
-//    recursion dfs; time: O(n), space: O(n); fast
+//    recursion dfs; time: O(n), space: O(n); fastest;
     public static void flatten(TreeNode root) {
         flattenTree(root);
     }
@@ -40,12 +41,71 @@ public class FlattenToList114 {
         return rightTail != null ? rightTail : leftTail;
     }
 
-//    Iterative dfs (stack);
+//    Iterative dfs (stack); time: O(n), space: O(n)
     public static void flatten1(TreeNode root) {
-        Stack<TreeNode> stack = new Stack<>();
+        if(root == null) {
+            return;
+        }
+
+        final int START = 1, END = 2;
+        TreeNode tailNode = null;
+        Stack<Pair<TreeNode, Integer>> stack = new Stack<>();
+        stack.push(new Pair<>(root, START));
+
+        while(!stack.isEmpty()) {
+            Pair<TreeNode, Integer> nodeData = stack.pop();
+            TreeNode node = nodeData.getKey();
+            int recursionState = nodeData.getValue();
+            if(node.left == null && node.right == null) {
+                tailNode = node;
+                continue;
+            }
+            if(recursionState == START) {
+                if(node.left != null) {
+                    stack.push(new Pair<>(node, END));
+                    stack.push(new Pair<>(node.left, START));
+                } else {
+                    stack.push(new Pair<>(node.right, START));
+                }
+            } else {
+//                process this node's subtree
+                TreeNode rightNode = node.right;
+                if(tailNode != null) {
+                    tailNode.right = node.right;
+                    node.right = node.left;
+                    node.left = null;
+                }
+                if(rightNode != null) {
+                    stack.push(new Pair<>(rightNode, START));
+                }
+            }
+        }
     }
 
+//    time: O(n), space: O(1)
+//    constant space (like morris traversal);
+//    unlike recursion we don't wait till we process the left and right subtrees entirely, we rather rewire the connections on the fly;
+    public static void flatten2(TreeNode root) {
+        if(root == null) {
+            return;
+        }
+        TreeNode node = root;
+        while(node != null) {
+            if(node.left != null) {
+//                find the rightmost node for this
+                TreeNode rightMost = node.left;
+                while(rightMost.right != null) {
+                    rightMost = rightMost.right;
+                }
 
+//                rewire the connection
+                rightMost.right = node.right;
+                node.right = node.left;
+                node.left = null;
+            }
+            node = node.right;
+        }
+    }
 }
 
 /*
