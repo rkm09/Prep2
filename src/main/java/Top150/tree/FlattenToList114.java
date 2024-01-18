@@ -2,6 +2,8 @@ package Top150.tree;
 
 import GenDS.TreeNode;
 
+import java.util.Stack;
+
 
 public class FlattenToList114 {
     public static void main(String[] args) {
@@ -13,7 +15,7 @@ public class FlattenToList114 {
         TreeNode root = new TreeNode(1, left, right);
     }
 
-//    recursion dfs; time: O(n), space: O(n)
+//    recursion dfs; time: O(n), space: O(n); fast
     public static void flatten(TreeNode root) {
         flattenTree(root);
     }
@@ -37,6 +39,13 @@ public class FlattenToList114 {
 
         return rightTail != null ? rightTail : leftTail;
     }
+
+//    Iterative dfs (stack);
+    public static void flatten1(TreeNode root) {
+        Stack<TreeNode> stack = new Stack<>();
+    }
+
+
 }
 
 /*
