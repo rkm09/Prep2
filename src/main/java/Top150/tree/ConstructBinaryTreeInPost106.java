@@ -28,6 +28,7 @@ public class ConstructBinaryTreeInPost106 {
         }
         int rootValue = postorder[postOrderIndex--];
         TreeNode root = new TreeNode(rootValue);
+//        following the post order[LeftRootRight] logic, traversing from end of list...-> root -> node's right -> node's left
         root.right = arrayToTree(postorder, inorderIndexMap.get(rootValue) + 1, right);
         root.left = arrayToTree(postorder, left, inorderIndexMap.get(rootValue) - 1);
         return root;
