@@ -3,10 +3,58 @@ package LeetDaily.medium;
 public class MinFallingPathSum931 {
     public static void main(String[] args) {
         int[][] matrix = {{2,1,3},{6,5,4},{7,8,9}};
-        System.out.println(minFallingPathSum2(matrix));
+        System.out.println(minFallingPathSum(matrix));
     }
 
-//    top down dp with memoization (dfs approach); time: O(n^2), space: O(n)
+//    space optimized bottom up dp(tabulation); time: O(N^2), space: O(n)
+    public static int minFallingPathSum(int[][] matrix) {
+        int n = matrix.length;
+        int[] dp = new int[n + 1];
+        for(int row = n - 1 ; row >= 0 ; row--) {
+            int[] currentRow = new int[n + 1];
+            for(int col = 0 ; col < n ; col++) {
+                if(col == 0) {
+                    currentRow[col] = Math.min(dp[col], dp[col + 1]) + matrix[row][col];
+                } else if(col == n - 1) {
+                    currentRow[col] = Math.min(dp[col], dp[col - 1]) + matrix[row][col];
+                } else {
+                    currentRow[col] = Math.min(dp[col], Math.min(dp[col - 1], dp[col + 1])) + matrix[row][col];
+                }
+            }
+            dp = currentRow;
+        }
+        int minPathSum = Integer.MAX_VALUE;
+        for(int startCol = 0 ; startCol < n ; startCol++) {
+            minPathSum = Math.min(minPathSum, dp[startCol]);
+        }
+        return minPathSum;
+    }
+
+
+//    bottom up dp(tabulation); time: O(n^2), space: O(n^2)
+    public static int minFallingPathSum1(int[][] matrix) {
+        int n = matrix.length;
+        int[][] dp = new int[n + 1][n + 1];
+        for(int row = n - 1 ; row >= 0 ; row--) {
+            for(int col = 0 ; col < n ; col++) {
+                if(col == 0) {
+                    dp[row][col] = Math.min(dp[row + 1][col], dp[row + 1][col + 1]) + matrix[row][col];
+                } else if(col == n - 1) {
+                    dp[row][col] = Math.min(dp[row + 1][col], dp[row + 1][col - 1]) + matrix[row][col];
+                } else {
+                    dp[row][col] = Math.min(dp[row + 1][col], Math.min(dp[row + 1][col - 1], dp[row + 1][col + 1]))
+                            + matrix[row][col];
+                }
+            }
+        }
+        int minPathSum = Integer.MAX_VALUE;
+        for(int startCol = 0 ; startCol < n ; startCol++) {
+            minPathSum = Math.min(minPathSum, dp[0][startCol]);
+        }
+        return minPathSum;
+    }
+
+//    top down dp with memoization (dfs approach); time: O(n^2), space: O(n^2); fastest
     public static int minFallingPathSum2(int[][] matrix) {
         int minPathSum = Integer.MAX_VALUE;
         Integer[][] memo = new Integer[matrix.length][matrix[0].length];
