@@ -5,7 +5,7 @@ import GenDS.TreeNode;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ConstructBinaryTreePreIn {
+public class ConstructBinaryTreePreIn105 {
     private static int preorderIndex;
     private static Map<Integer, Integer> inorderIndexMap;
     public static void main(String[] args) {
