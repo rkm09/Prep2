@@ -6,13 +6,43 @@ import java.util.Stack;
 
 public class SumSubArrayMins907 {
     public static void main(String[] args) {
-        int[] arr = {3,1,2,1,4};
+        int[] arr = {3,1,2,4};
         System.out.println(sumSubarrayMins(arr));
+    }
+
+//    dp + monotonic stack; time: O(n), space: O(n)
+    public static int sumSubarrayMins(int[] arr) {
+        int n = arr.length;
+        int MOD = (int) 1e9 + 7;
+        long minSubSum = 0;
+//        dp array that maintains sum for all ending with index i
+        int[] dp = new int[n];
+//        monotonic increasing stack to keep track of prev min
+        Stack<Integer> stack = new Stack<>();
+        for(int i = 0 ; i < n ; i++) {
+            while(!stack.isEmpty() && arr[i] <= arr[stack.peek()]) {
+                stack.pop();
+            }
+            if(stack.size() > 0) {
+                int prevSmaller = stack.peek();
+//                as new pairs are formed with all prev types, hence can reuse (prev dp) as an overlapping case
+                dp[i] = dp[prevSmaller] + arr[i] * (i - prevSmaller);
+            } else {
+//                no element smaller than this one
+                dp[i] = arr[i] * (i + 1);
+            }
+            stack.push(i);
+        }
+        for(int num : dp) {
+            minSubSum += num;
+            minSubSum %= MOD;
+        }
+        return (int) minSubSum;
     }
 
 //   Monotonic stack [used to calculate the range where an element is the min]; time: O(n), space: O(n)
 //   Monotonic stacks are used to calculate the previous smaller element and the next smaller element in linear time complexity; (two types: increasing and decreasing)
-    public static int sumSubarrayMins(int[] arr) {
+    public static int sumSubarrayMins1(int[] arr) {
         int n = arr.length;
         int MOD = (int) 1e9 + 7;
         long minSubSum = 0;
