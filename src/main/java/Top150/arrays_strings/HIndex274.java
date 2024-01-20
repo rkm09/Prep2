@@ -1,13 +1,37 @@
 package Top150.arrays_strings;
 
+import java.util.Arrays;
+
 public class HIndex274 {
     public static void main(String[] args) {
         int[] citations = {3,0,6,1,5};
         System.out.println(hIndex(citations));
     }
+
+//    counting sort; time: O(n), space: O(n)
     public static int hIndex(int[] citations) {
         int n = citations.length;
-        return 0;
+        int[] papers = new int[n + 1];
+        for(int c : citations) {
+            papers[Math.min(c, n)]++;
+        }
+//        calculate h-index
+        int k = n, s = papers[k];
+        while(s < k) {
+            s += papers[--k];
+        }
+        return k;
+    }
+
+//    sorting (comparison sort); time: O(nlogn), space: O(1)
+    public static int hIndex1(int[] citations) {
+        int n = citations.length;
+        Arrays.sort(citations);
+        int i = 0;
+        while(i < n && citations[n - 1 - i] > i) {
+            i++;
+        }
+        return i;
     }
 }
 
