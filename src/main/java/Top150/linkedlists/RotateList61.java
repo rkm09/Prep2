@@ -14,7 +14,7 @@ public class RotateList61 {
         }
     }
 
-//    [def];
+//    [def]; time: O(n), space: O(1)
     public static ListNode rotateRight(ListNode head, int k) {
         if(head == null || k == 0 || head.next == null) {
             return head;
