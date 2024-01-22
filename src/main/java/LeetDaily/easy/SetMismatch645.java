@@ -1,12 +1,16 @@
 package LeetDaily.easy;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SetMismatch645 {
     public static void main(String[] args) {
-        int[] nums = {3,2,2};
-        System.out.println(Arrays.toString(findErrorNums(nums)));
+        int[] nums = {1,3,3,4};
+        System.out.println(Arrays.toString(findErrorNums1(nums)));
     }
+
+//   [def]; counting sort; time: O(n), space: O(n); fastest
     public static int[] findErrorNums(int[] nums) {
         int n = nums.length;
         int[] freq = new int[n+1];
@@ -24,6 +28,43 @@ public class SetMismatch645 {
             }
         }
         return new int[]{dup, missing};
+    }
+
+//    hashmap; time: O(n), space: O(n)
+    public static int[] findErrorNums1(int[] nums) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for(int num : nums) {
+            map.put(num, map.getOrDefault(num, 0) + 1);
+        }
+        int dup = 0, missing = 0;
+        for(int i = 1 ; i <= nums.length ; i++) {
+            if(map.containsKey(i)) {
+                if(map.get(i) == 2) {
+                    dup = i;
+                }
+            } else {
+                missing = i;
+            }
+        }
+        return new int[] {dup, missing};
+    }
+
+//    sorting; time: O(nlogn), space: O(logn)
+    public static int[] findErrorNums2(int[] nums) {
+        Arrays.sort(nums);
+        int n = nums.length;
+//        case: [2,2]..initialize missing with 1
+        int dup = -1, missing = 1;
+        for(int i = 1 ; i < n ; i++) {
+            if(nums[i] == nums[i - 1]) {
+                dup = nums[i];
+            }
+            if(nums[i] > nums[i - 1] + 1) {
+                missing = nums[i - 1] + 1;
+            }
+        }
+//        special case like [1,1]
+        return new int[] {dup, nums[n - 1] != n ? n : missing};
     }
 }
 
