@@ -15,18 +15,13 @@ public class SetMismatch645 {
         }
         int missing = 0;
         int dup = 0;
-        int i = 1;
-        while(i <= n) {
+        for (int i = 1; i <= n ; i++) {
             if(freq[i] == 0) {
                 missing = i;
             }
-            if(freq[i] > 1) {
+            else if(freq[i] > 1) {
                 dup = i;
             }
-            if(dup != 0 && missing != 0) {
-                return new int[]{dup, missing};
-            }
-            i++;
         }
         return new int[]{dup, missing};
     }
