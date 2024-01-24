@@ -9,21 +9,64 @@ import java.util.List;
 import java.util.Queue;
 
 public class BinaryTreeLevelOrder102 {
-    static List<List<Integer>> ans;
+    static List<List<Integer>> levels;
     public static void main(String[] args) {
         TreeNode right1 = new TreeNode(15);
         TreeNode right2 = new TreeNode(7);
         TreeNode left = new TreeNode(9);
         TreeNode right = new TreeNode(20, right1, right2);
         TreeNode root = new TreeNode(3, left, right);
-        List<List<Integer>> list = levelOrder1(root);
+        List<List<Integer>> list = levelOrder2(root);
         for(List<Integer> li : list) {
             System.out.println(li);
         }
     }
 
-//    [def] iterative bfs; time: O(n), space: O(n)
+    //  [def]; recursion; time: O(n), space: O(n); faster;
     public static List<List<Integer>> levelOrder(TreeNode root) {
+        levels = new ArrayList<>();
+        if(root == null) return levels;
+        helper(root, 0);
+        return levels;
+    }
+    private static void helper(TreeNode node, int level) {
+        if(node != null) {
+            if(levels.size() == level) {
+                levels.add(new ArrayList<>());
+            }
+            levels.get(level).add(node.val);
+            helper(node.left, level + 1);
+            helper(node.right, level + 1);
+        }
+    }
+
+    //   iterative bfs; time: O(n), space: O(n)
+    public static List<List<Integer>> levelOrder1(TreeNode root) {
+        List<List<Integer>> levels = new ArrayList<>();
+        if(root == null) return levels;
+        Queue<TreeNode> queue = new LinkedList();
+        queue.offer(root);
+        int level = 0;
+        while(!queue.isEmpty()) {
+            levels.add(new ArrayList<>());
+            int levelLength = queue.size();
+            for(int i = 0 ; i < levelLength ; i++) {
+                TreeNode node = queue.poll();
+                levels.get(level).add(node.val);
+                if(node.left != null) {
+                    queue.offer(node.left);
+                }
+                if(node.right != null) {
+                    queue.offer(node.right);
+                }
+            }
+            level++;
+        }
+        return levels;
+    }
+
+//    [def] iterative bfs; time: O(n), space: O(n)
+    public static List<List<Integer>> levelOrder2(TreeNode root) {
         List<List<Integer>> res = new ArrayList<>();
         if(root == null) return res;
         Queue<Pair<TreeNode, Integer>> queue = new LinkedList();
@@ -32,40 +75,22 @@ public class BinaryTreeLevelOrder102 {
             Pair<TreeNode, Integer> pair = queue.poll();
             TreeNode node = pair.getKey();
             int level = pair.getValue();
-            if(node != null) {
-                if(res.size() == level) {
-                    List<Integer> li = new ArrayList<>();
-                    li.add(node.val);
-                    res.add(li);
-                } else {
-                    res.get(level).add(node.val);
-                }
+            if(res.size() == level) {
+                res.add(new ArrayList<>());
+            }
+            res.get(level).add(node.val);
+            if(node.left != null) {
                 queue.offer(new Pair<>(node.left, level + 1));
+            }
+            if(node.right != null) {
                 queue.offer(new Pair<>(node.right, level + 1));
             }
+
         }
         return res;
     }
 
-//    recursion; time: O(n), space: O(n); faster;
-    public static List<List<Integer>> levelOrder1(TreeNode root) {
-       ans = new ArrayList<>();
-       bfs(root, 0);
-       return ans;
-    }
-    private static void bfs(TreeNode node, int level) {
-        if(node != null) {
-            if(ans.size() == level) {
-                List<Integer> li = new ArrayList<>();
-                li.add(node.val);
-                ans.add(li);
-            } else {
-                ans.get(level).add(node.val);
-            }
-            bfs(node.left, level + 1);
-            bfs(node.right, level + 1);
-        }
-    }
+
 }
 
 /*
