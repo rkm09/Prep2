@@ -1,14 +1,11 @@
 package LeetDaily.medium;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class MaxLength1239 {
     public static void main(String[] args) {
         List<String> arr = Arrays.asList(new String[] {"un","iq","ue"});
-        System.out.println(arr);
+        System.out.println(maxLength3(arr));
     }
 
 //    recursion; time: O(2^n), space: O(n)
@@ -26,6 +23,29 @@ public class MaxLength1239 {
         int best = res.length();
         for(int i = pos ; i < arr.size() ; i++) {
             best = Math.max(best, dfs(arr, i + 1, res + arr.get(i)));
+        }
+        return best;
+    }
+
+//    iterative brute force; time: O(2^n), space: O(n)
+    public static int maxLength3(List<String> arr) {
+        List<String> results = new ArrayList<>();
+        int best = 0;
+        results.add("");
+        for(String word : arr) {
+            int resLen = results.size();
+            for(int i = 0 ; i < resLen ; i++) {
+                String newRes = results.get(i) + word;
+                Set<Character> newResSet = new HashSet<>();
+                for(char c : newRes.toCharArray()) {
+                    newResSet.add(c);
+                }
+                if(newResSet.size() != newRes.length()) {
+                    continue;
+                }
+                results.add(newRes);
+                best = Math.max(best, newRes.length());
+            }
         }
         return best;
     }
