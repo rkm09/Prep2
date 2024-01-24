@@ -20,8 +20,27 @@ public class PseudoPalindromic1457 {
         System.out.println(pseudoPalindromicPaths(root));
     }
 
-    //    iterative preorder dfs; time: O(n), space: O(h)
+    //    recursive dfs; time: O(n), space: O(h); faster
     public static int pseudoPalindromicPaths(TreeNode root) {
+        dfs(root, 0);
+        return count;
+    }
+
+    private static void dfs(TreeNode node, int path) {
+        if (node != null) {
+            path = path ^ (1 << node.val);
+            if (node.left == null && node.right == null) {
+                if((path & (path - 1)) == 0) {
+                    count++;
+                }
+            }
+            dfs(node.left, path);
+            dfs(node.right, path);
+        }
+    }
+
+    //    iterative preorder dfs; time: O(n), space: O(h)
+    public static int pseudoPalindromicPaths1(TreeNode root) {
         int count = 0, path;
         Deque<Pair<TreeNode, Integer>> stack = new ArrayDeque();
         stack.push(new Pair(root, 0));
@@ -46,19 +65,6 @@ public class PseudoPalindromic1457 {
         return count;
     }
 
-    private static void dfs(TreeNode root, int num) {
-        if (root != null) {
-            num = 10 * num + root.val;
-            if (root.left == null && root.right == null) {
-//                li.add(num);
-//                if(isPalindrome(num)) count++;
-//                return;
-//
-            }
-            dfs(root.left, num);
-            dfs(root.right, num);
-        }
-    }
 }
 
 /*
