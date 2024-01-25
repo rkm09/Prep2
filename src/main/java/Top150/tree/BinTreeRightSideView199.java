@@ -37,7 +37,7 @@ public class BinTreeRightSideView199 {
             dfs(node.left, level + 1);
         }
     }
-    
+
 // [def]; dfs
     private static void dfs1(TreeNode node, int level) {
         if(rightView.size() == level) {
