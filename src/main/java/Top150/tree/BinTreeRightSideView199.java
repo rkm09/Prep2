@@ -2,10 +2,7 @@ package Top150.tree;
 
 import GenDS.TreeNode;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 public class BinTreeRightSideView199 {
     private static List<Integer> rightView;
@@ -18,7 +15,7 @@ public class BinTreeRightSideView199 {
         System.out.println(rightSideView1(root));
     }
 
-    //    [def]; recursive dfs; time: O(n), space: O(h) ; fastest;
+    //    [def]; recursive dfs; time: O(n), space: O(h) ; h is the height (in case of skewed tree h = n); fastest;
     public static List<Integer> rightSideView(TreeNode root) {
         rightView = new ArrayList<>();
         if(root == null) {
@@ -27,7 +24,22 @@ public class BinTreeRightSideView199 {
         dfs(root, 0);
         return rightView;
     }
+
     private static void dfs(TreeNode node, int level) {
+        if(rightView.size() == level) {
+            rightView.add(node.val);
+        }
+//       in this case setting at level is not needed as we traverse right to left
+        if(node.right != null) {
+            dfs(node.right, level + 1);
+        }
+        if(node.left != null) {
+            dfs(node.left, level + 1);
+        }
+    }
+    
+// [def]; dfs
+    private static void dfs1(TreeNode node, int level) {
         if(rightView.size() == level) {
             rightView.add(level);
         }
@@ -40,27 +52,63 @@ public class BinTreeRightSideView199 {
         }
     }
 
-//    [def]; time: O(n), space: O(n) ; fast;
+//    [def] (bfs with level); time: O(n), space: O(d) ; fast; d is the tree diameter
     public static List<Integer> rightSideView1(TreeNode root) {
         rightView = new ArrayList<>();
         if(root == null) {
             return rightView;
         }
-        Queue<TreeNode> queue = new LinkedList<>();
-        queue.add(root);
+        ArrayDeque<TreeNode> queue = new ArrayDeque<>() {{ offer(root); }};
+
         while(!queue.isEmpty()) {
             int levelLength = queue.size();
+
             for(int i = 0 ; i < levelLength ; i++) {
                 TreeNode node = queue.poll();
                 if(i == levelLength - 1) {
                     rightView.add(node.val);
                 }
                 if(node.left != null) {
-                    queue.add(node.left);
+                    queue.offer(node.left);
                 }
                 if(node.right != null) {
-                    queue.add(node.right);
+                    queue.offer(node.right);
                 }
+            }
+        }
+        return rightView;
+    }
+
+//   bfs with sentinel; time: O(n), space: O(d); where d is the diameter; worst case complete bin tree; fast;
+    public static List<Integer> rightSideView2(TreeNode root) {
+        List<Integer> rightView = new ArrayList<>();
+        if(root == null) {
+            return rightView;
+        }
+//        We can't use array deque here as we will store null to mark sentinel(level end), which is not supported by array deque
+        Queue<TreeNode> queue = new LinkedList<>() {{ offer(root); offer(null); }};
+        TreeNode curr = root;
+        TreeNode prev;
+
+        while(!queue.isEmpty()) {
+            prev = curr;
+            curr = queue.poll();
+
+            while(curr != null) {
+                if(curr.left != null) {
+                    queue.offer(curr.left);
+                }
+                if(curr.right != null) {
+                    queue.offer(curr.right);
+                }
+                prev = curr;
+                curr = queue.poll();
+            }
+
+            rightView.add(prev.val);
+//            add sentinel to mark end of this level
+            if(!queue.isEmpty()) {
+                queue.offer(null);
             }
         }
         return rightView;
