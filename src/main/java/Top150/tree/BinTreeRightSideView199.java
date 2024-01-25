@@ -19,29 +19,29 @@ public class BinTreeRightSideView199 {
     }
 
     //    [def]; recursive dfs; time: O(n), space: O(h) ; fastest;
-    public static List<Integer> rightSideView1(TreeNode root) {
+    public static List<Integer> rightSideView(TreeNode root) {
         rightView = new ArrayList<>();
+        if(root == null) {
+            return rightView;
+        }
         dfs(root, 0);
         return rightView;
     }
     private static void dfs(TreeNode node, int level) {
-        if(node != null) {
-            if(rightView.size() == level) {
-                rightView.add(level);
-            }
-            rightView.set(level, node.val);
-            if(node.left != null) {
-                dfs(node.left, level + 1);
-            }
-            if(node.right != null) {
-                dfs(node.right, level + 1);
-            }
-
+        if(rightView.size() == level) {
+            rightView.add(level);
+        }
+        rightView.set(level, node.val);
+        if(node.left != null) {
+            dfs(node.left, level + 1);
+        }
+        if(node.right != null) {
+            dfs(node.right, level + 1);
         }
     }
 
 //    [def]; time: O(n), space: O(n) ; fast;
-    public static List<Integer> rightSideView(TreeNode root) {
+    public static List<Integer> rightSideView1(TreeNode root) {
         rightView = new ArrayList<>();
         if(root == null) {
             return rightView;
