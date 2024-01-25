@@ -8,29 +8,18 @@ public class MaxLength1239 {
         System.out.println(maxLength(arr));
     }
 
-//   optimised recursion; time: O(2^n), space: O(2^(min(n,k)))
+//   optimised recursion; time: O(2^n), space: O(2^(min(n,k))) ; fast
     public static int maxLength(List<String> arr) {
         Set<Integer> optSet = new HashSet<>();
         for(String word : arr) {
-            wordToBitSetK(word, optSet);
+            wordToBitSet(word, optSet);
         }
         int[] optArr = new int[optSet.size()];
         int i = 0;
-        for(int num : optArr) {
-            optArr[i] = num;
+        for(int num : optSet) {
+            optArr[i++] = num;
         }
         return dfs(optArr, 0, 0);
-    }
-    private static void wordToBitSetK(String word, Set<Integer> optSet) {
-        int charBitSet = 0;
-        for(char c : word.toCharArray()) {
-            int mask = 1 << c - 'a';
-            if((charBitSet & mask) > 0) {
-                return;
-            }
-            charBitSet += mask;
-        }
-        optSet.add(charBitSet + (word.length() << 26));
     }
     private static int dfs(int[] optArr, int pos, int res) {
         int oldLen = res >> 26;
@@ -39,10 +28,11 @@ public class MaxLength1239 {
         for(int i = pos ; i < optArr.length ; i++) {
             int newChars = optArr[i] & ((1 << 26) - 1);
             int newLen = optArr[i] >> 26;
-            if((oldChars & newChars) > 0) {
+            if((oldChars & newChars) != 0) {
                 continue;
             }
-            int newRes = oldChars + newChars + ((oldLen + newLen) << 26);
+//            combine the result into a new result and trigger recursion (thus eliminating the need to backtrack)
+            int newRes = oldChars + newChars + (oldLen + newLen << 26);
             best = Math.max(best, dfs(optArr, i + 1, newRes));
         }
         return best;
