@@ -6,15 +6,10 @@ public class OutOfBounds576 {
     private static final int M = 1000000007;
     private static int[][][] memo;
     public static void main(String[] args) {
-        System.out.println(findPaths(2,2,2,0,0));
+        System.out.println(findPaths1(2,2,2,0,0));
     }
 
-//    bottom up dp; time: O(n), space: O(n)
-    public static int findPaths1(int m, int n, int maxMove, int startRow, int startColumn) {
-        return 0;
-    }
-
-//    recursion with memoization; time: O(mnN), space: O(mnN) where N is the maxMove
+//    recursion with memoization; time: O(mnN), space: O(mnN) where N is the maxMove ; fastest
     public static int findPaths(int m, int n, int maxMove, int startRow, int startColumn) {
         memo = new int[m][n][maxMove + 1];
         for(int[][] var : memo) for(int[] v : var) Arrays.fill(v, -1);
@@ -37,6 +32,32 @@ public class OutOfBounds576 {
                         findAllPaths(m, n, maxMove - 1, i, j - 1)) % M
         ) % M;
         return memo[i][j][maxMove];
+    }
+
+    //    dp; time: O(N*m*n), space: O(mn)
+    public static int findPaths1(int m, int n, int maxMove, int startRow, int startColumn) {
+        int[][] dp = new int[m][n];
+        int count = 0;
+        dp[startRow][startColumn] = 1;
+        for(int move = 1 ; move <= maxMove ; move++) {
+            int[][] temp = new int[m][n];
+            for(int i = 0 ; i < m ; i++) {
+                for(int j = 0 ; j < n ; j++) {
+                    if(i == m - 1) count = (count + dp[i][j]) % M;
+                    if(j == n - 1) count = (count + dp[i][j]) % M;
+                    if(i == 0) count = (count + dp[i][j]) % M;
+                    if(j == 0) count = (count + dp[i][j]) % M;
+
+                    temp[i][j] = (
+                            ((i > 0 ? dp[i - 1][j] : 0) + (i < m - 1 ? dp[i + 1][j] : 0)) % M +
+                                    ((j > 0 ? dp[i][j - 1] : 0) + (j < n - 1 ? dp[i][j + 1] : 0)) % M
+                    ) % M;
+
+                }
+            }
+            dp = temp;
+        }
+        return count;
     }
 
 //    [TLE] brute force recursion; time: O(4^n), space: O(n)
