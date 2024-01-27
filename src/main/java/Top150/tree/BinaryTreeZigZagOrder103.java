@@ -123,7 +123,7 @@ public class BinaryTreeZigZagOrder103 {
         return results;
     }
 
-    //    recursive dfs; time :O(n), space: O(n)
+    //    recursive dfs; time :O(n), space: O(n) ; fast
     public static List<List<Integer>> zigzagLevelOrder4(TreeNode root) {
         zigZagList = new ArrayList<>();
         if(root == null) {
