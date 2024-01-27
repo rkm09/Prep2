@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BinaryTreeZigZagOrder103 {
+    private static List<List<Integer>> zigZagList;
     public static void main(String[] args) {
         TreeNode left1 = new TreeNode(7);
         TreeNode left = new TreeNode(9, left1, null);
@@ -14,12 +15,47 @@ public class BinaryTreeZigZagOrder103 {
 //        TreeNode right2 = new TreeNode(7);
         TreeNode right = new TreeNode(20, right1, null);
         TreeNode root = new TreeNode(3, left, right);
-        List<List<Integer>> zigZag = zigzagLevelOrder(root);
+        List<List<Integer>> zigZag = zigzagLevelOrder1(root);
         for(List<Integer> li : zigZag) {
             System.out.println(li);
         }
     }
-    public static List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+
+//    [def]; recursive dfs; time : O(n), space: O(h)
+    public static List<List<Integer>> zigzagLevelOrder1(TreeNode root) {
+        zigZagList = new ArrayList<>();
+        if(root == null) {
+            return zigZagList;
+        }
+        helper(root, 0);
+        int idx = 0;
+        for(List<Integer> li : zigZagList) {
+            if(idx % 2 != 0) {
+                List<Integer> liR = new ArrayList<>();
+                for(int i = li.size() - 1 ; i >= 0 ; i--) {
+                    liR.add(li.get(i));
+                }
+                zigZagList.set(idx, liR);
+            }
+            idx++;
+        }
+        return zigZagList;
+    }
+    private static void helper(TreeNode node, int level) {
+        if(zigZagList.size() == level) {
+            zigZagList.add(new ArrayList<>());
+        }
+        zigZagList.get(level).add(node.val);
+        if(node.left != null) {
+            helper(node.left, level + 1);
+        }
+        if(node.right != null) {
+            helper(node.right, level + 1);
+        }
+    }
+
+//    [def] iterative bfs; time : O(n), space: O(d)
+    public static List<List<Integer>> zigzagLevelOrder2(TreeNode root) {
         List<List<Integer>> results = new ArrayList<>();
         if(root == null) {
             return results;
