@@ -2,9 +2,7 @@ package Top150.tree;
 
 import GenDS.TreeNode;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class BinaryTreeZigZagOrder103 {
     private static List<List<Integer>> zigZagList;
@@ -15,14 +13,14 @@ public class BinaryTreeZigZagOrder103 {
 //        TreeNode right2 = new TreeNode(7);
         TreeNode right = new TreeNode(20, right1, null);
         TreeNode root = new TreeNode(3, left, right);
-        List<List<Integer>> zigZag = zigzagLevelOrder1(root);
+        List<List<Integer>> zigZag = zigzagLevelOrder(root);
         for(List<Integer> li : zigZag) {
             System.out.println(li);
         }
     }
 
-//    [def]; recursive dfs; time : O(n), space: O(h)
-    public static List<List<Integer>> zigzagLevelOrder1(TreeNode root) {
+//    [def]; recursive dfs; time : O(n), space: O(n); fastest
+    public static List<List<Integer>> zigzagLevelOrder(TreeNode root) {
         zigZagList = new ArrayList<>();
         if(root == null) {
             return zigZagList;
@@ -54,7 +52,7 @@ public class BinaryTreeZigZagOrder103 {
         }
     }
 
-//    [def] iterative bfs; time : O(n), space: O(d)
+//    [def] iterative bfs; time : O(n), space: O(n)
     public static List<List<Integer>> zigzagLevelOrder2(TreeNode root) {
         List<List<Integer>> results = new ArrayList<>();
         if(root == null) {
@@ -87,6 +85,69 @@ public class BinaryTreeZigZagOrder103 {
            }
         }
         return results;
+    }
+
+//    iterative bfs; using method 2 (extra null); time :O(n), space: O(n)
+    public static List<List<Integer>> zigzagLevelOrder3(TreeNode root) {
+        List<List<Integer>> results = new ArrayList<>();
+        if(root == null) {
+            return results;
+        }
+        LinkedList<TreeNode> queue = new LinkedList() {{ offer(root); offer(null); }};
+        LinkedList<Integer> levelNodes = new LinkedList<>();
+        boolean isLeftFirst = true;
+        while(!queue.isEmpty()) {
+            TreeNode node = queue.poll();
+            if(node != null) {
+                if(isLeftFirst) {
+                    levelNodes.addLast(node.val);
+                } else {
+                    levelNodes.addFirst(node.val);
+                }
+
+                if(node.left != null) {
+                    queue.offer(node.left);
+                }
+                if(node.right != null) {
+                    queue.offer(node.right);
+                }
+            } else {
+                results.add(levelNodes);
+                levelNodes = new LinkedList<>();
+                if(!queue.isEmpty()) {
+                    queue.offer(null);
+                }
+                isLeftFirst = !isLeftFirst;
+            }
+        }
+        return results;
+    }
+
+    //    recursive dfs; time :O(n), space: O(n)
+    public static List<List<Integer>> zigzagLevelOrder4(TreeNode root) {
+        zigZagList = new ArrayList<>();
+        if(root == null) {
+            return zigZagList;
+        }
+        dfs(root, 0);
+        return zigZagList;
+    }
+    private static void dfs(TreeNode node, int level) {
+        if(zigZagList.size() == level) {
+            zigZagList.add(new LinkedList<>() {{ add(node.val); }});
+        } else {
+            if(level % 2 == 0) {
+                zigZagList.get(level).add(node.val);
+            } else {
+                zigZagList.get(level).add(0, node.val);
+            }
+        }
+        if(node.left != null) {
+            dfs(node.left, level + 1);
+        }
+        if(node.right != null) {
+            dfs(node.right, level + 1);
+        }
     }
 }
 
