@@ -23,12 +23,13 @@ public class SumToTarget1074 {
             }
         }
         Map<Integer, Integer> map = new HashMap<>();
-        int currSum = 0;
+        int currSum;
 //        fix 2 rows, create 1d from 2d
         for(int r1 = 1 ; r1 <= m ; r1++) {
             for(int r2 = r1 ; r2 <= m ; r2++) {
                 map.clear();
                 map.put(0, 1);
+//                compute 1D prefix sum for all matrices using [r1..r2] rows
                 for(int c = 1 ; c <= n ; c++) {
 //                    excluding the row above row 1, only focussing on r1 & r2; moving l to r
                     currSum = ps[r2][c] - ps[r1 - 1][c];
@@ -43,11 +44,33 @@ public class SumToTarget1074 {
         return count;
     }
 
+//    prefix sum(cumulative sum); time: O(mn^2), space: O(mn)
     public static int numSubmatrixSumTarget1(int[][] matrix, int target) {
         int m = matrix.length;
         int n = matrix[0].length;
         int count = 0;
-
+//        create 2d prefix sum
+        int[][] ps = new int[m + 1][n + 1];
+        for(int i = 1 ; i <= m ; i++) {
+            for(int j = 1 ; j <= n ; j++) {
+                ps[i][j] = ps[i - 1][j] + ps[i][j - 1] - ps[i - 1][j - 1] + matrix[i - 1][j - 1];
+            }
+        }
+//        map(sum of i, number of occurrences of sum of i)
+        Map<Integer, Integer> map = new HashMap<>();
+        int currSum;
+        for(int c1 = 1 ; c1 <= n ; c1++) {
+            for(int c2 = c1 ; c2 <= n ; c2++) {
+                map.clear();
+                map.put(0, 1);
+//                compute 1D prefix sum for all matrices using [c1..c2] cols
+                for(int r = 1 ; r <= m ; r++) {
+                    currSum = ps[r][c2] - ps[r][c1 - 1];
+                    count += map.getOrDefault(currSum - target, 0);
+                    map.put(currSum, map.getOrDefault(currSum, 0) + 1);
+                }
+            }
+        }
         return count;
     }
 }
