@@ -1,41 +1,54 @@
 package LeetDaily.hard;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class SumToTarget1074 {
     private static int res = 0;
     public static void main(String[] args) {
         int[][] matrix = {{0,1,0},{1,1,1},{0,1,0}};
         System.out.println(numSubmatrixSumTarget(matrix, 0));
     }
+
+//    prefix sum(cumulative sum); time: O(m^2n), space: O(mn)
     public static int numSubmatrixSumTarget(int[][] matrix, int target) {
         int m = matrix.length;
         int n = matrix[0].length;
-        int ans = 0;
-        for(int i = 0 ; i < m ; i++) {
-            for(int j = 0 ; j < n ; j++) {
-                if(matrix[i][j] == target) {
-                    ans++;
-                }
-                if(matrix[i][j] + matrix[i + 1][j + 1] == target){
-
+        int count = 0, sum = 0;
+//      2d  prefix sum; m + 1, n + 1 for extra zero padding
+        int[][] ps = new int[m + 1][n + 1];
+        for(int i = 1 ; i <= m ; i++) {
+            for(int j = 1 ; j <= n ; j++) {
+                ps[i][j] = ps[i - 1][j] + ps[i][j - 1] - ps[i - 1][j - 1] + matrix[i - 1][j - 1];
+            }
+        }
+        Map<Integer, Integer> map = new HashMap<>();
+        int currSum = 0;
+//        fix 2 rows, create 1d from 2d
+        for(int r1 = 1 ; r1 <= m ; r1++) {
+            for(int r2 = r1 ; r2 <= m ; r2++) {
+                map.clear();
+                map.put(0, 1);
+                for(int c = 1 ; c <= n ; c++) {
+//                    excluding the row above row 1, only focussing on r1 & r2; moving l to r
+                    currSum = ps[r2][c] - ps[r1 - 1][c];
+                    if(map.containsKey(currSum - target)) {
+                        count += map.get(currSum - target);
+                    }
+                    map.put(currSum, map.getOrDefault(currSum, 0) + 1);
                 }
             }
         }
-        return ans;
+
+        return count;
     }
 
     public static int numSubmatrixSumTarget1(int[][] matrix, int target) {
-        helper(matrix, target, 0, 0);
-        return res;
-    }
-    private static int helper(int[][] matrix, int t, int i, int j) {
-        if(i < 0 || j < 0 || i >= matrix.length || j >= matrix[0].length) {
-            return -1;
-        }
-        if(matrix[i][j] == t) {
-            return res++;
-        }
-        res = helper(matrix, t, i + 1, j + 1) + helper(matrix, t, i - 1, j - 1);
-        return res;
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int count = 0;
+
+        return count;
     }
 }
 
