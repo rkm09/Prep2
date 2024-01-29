@@ -34,23 +34,17 @@ public class ValidateBST98 {
         return isValid;
     }
 
+//    recursion; time: O(n), space: O(n)
     public static boolean isValidBST(TreeNode root) {
-         return helper(root, root.val);
+         return validate(root, null, null);
     }
-    private static boolean helper(TreeNode node, int val) {
-        if(node.left != null) {
-            if(node.left.val >= node.val || node.left.val >= val) {
-                return false;
-            }
-            helper(node.left, val);
+    private static boolean validate(TreeNode node, Integer low, Integer high) {
+        if(node == null)
+            return true;
+        if((low != null && node.val <= low) || (high != null && node.val >= high)) {
+            return false;
         }
-        if(node.right != null) {
-            if(node.right.val <= node.val || node.right.val <= val) {
-                return false;
-            }
-            helper(node.right, val);
-        }
-        return true;
+        return validate(node.right, node.val, high) && validate(node.left, low, node.val);
     }
 }
 
