@@ -15,17 +15,17 @@ public class PaintHouse256 {
         int[][] costs = {{17,2,17},{16,16,5},{14,3,19}};
         System.out.println(ph.minCost(costs));
     }
-    public int minCost(int[][] costs) {
-        int cost = 0;
-        int m = costs.length;
-        int[][] dp = new int[m][3];
-        for(int i = 0 ; i < m ; i++) {
-            for(int j = 0 ; j < m ; j++) {
-//                dp[i][0] = costs[i][0] + costs[1]
-            }
 
+//    DP; time: O(n), space: O(n) [in case of an in-place without a new dp array: O(1)]
+    public int minCost(int[][] costs) {
+        int m = costs.length;
+        int[][] dp = costs;
+        for(int i = m - 2 ; i >= 0 ; i--) {
+            dp[i][0] += Math.min(dp[i + 1][1], dp[i + 1][2]);
+            dp[i][1] += Math.min(dp[i + 1][0], dp[i + 1][2]);
+            dp[i][2] += Math.min(dp[i + 1][0], dp[i + 1][1]);
         }
-        return cost;
+        return Math.min(dp[0][0], Math.min(dp[0][1], dp[0][2]));
     }
 
 //    memoized recursion; time: O(n), space: O(n)
