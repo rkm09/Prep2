@@ -15,11 +15,26 @@ public class PaintHouse256 {
         int[][] costs = {{17,2,17},{16,16,5},{14,3,19}};
         System.out.println(ph.minCost(costs));
     }
-
-//    DP; time: O(n), space: O(n) [in case of an in-place without a new dp array: O(1)]
+    
+//    Constant space bottom up DP; time: O(n), space: O(1)
     public int minCost(int[][] costs) {
         int m = costs.length;
-        int[][] dp = costs;
+        int[] previousRow = costs[m - 1].clone();
+        for(int i = m - 2 ; i >= 0 ; i--) {
+            int[] currentRow = costs[i].clone();
+            currentRow[0] += Math.min(previousRow[1], previousRow[2]);
+            currentRow[1] += Math.min(previousRow[0], previousRow[2]);
+            currentRow[2] += Math.min(previousRow[0], previousRow[1]);
+            previousRow = currentRow;
+        }
+        return Math.min(previousRow[0], Math.min(previousRow[1], previousRow[2]));
+    }
+
+//  Bottom up DP; time: O(n), space: O(n) [in case of an in-place without a new dp array: O(1)]
+    public int minCost1(int[][] costs) {
+        int m = costs.length;
+//        int[][] dp = costs; this is just a reference and will still overwrite input array
+        int[][] dp = costs.clone();
         for(int i = m - 2 ; i >= 0 ; i--) {
             dp[i][0] += Math.min(dp[i + 1][1], dp[i + 1][2]);
             dp[i][1] += Math.min(dp[i + 1][0], dp[i + 1][2]);
