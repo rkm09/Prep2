@@ -7,7 +7,10 @@ public class ImplementQueue232 {
 
     }
 }
+
+// Amortized O(1)
 class MyQueue {
+    int front;
     Stack<Integer> stack1;
     Stack<Integer> stack2;
     public MyQueue() {
@@ -15,10 +18,93 @@ class MyQueue {
         stack2 = new Stack<>();
     }
 
+    //    O(1)
+    public void push(int x) {
+        if(stack1.empty())
+            front = x;
+        stack1.push(x);
+    }
+
+    //    Amortized O(1) [average case; worst case still O(n)]
+    public int pop() {
+        if(stack2.isEmpty()) {
+            while (!stack1.isEmpty()) {
+                stack2.push(stack1.pop());
+            }
+        }
+        return stack2.pop();
+    }
+
+    //    O(1)
+    public int peek() {
+        if(!stack2.isEmpty()) {
+            return stack2.peek();
+        }
+        return front;
+    }
+
+    //    O(1)
+    public boolean empty() {
+        return stack1.isEmpty() && stack2.isEmpty();
+    }
+}
+
+//------------------------------------
+class MyQueue1 {
+    int front;
+    Stack<Integer> stack1;
+    Stack<Integer> stack2;
+    public MyQueue1() {
+        stack1 = new Stack<>();
+        stack2 = new Stack<>();
+    }
+
+//    O(n)
+    public void push(int x) {
+        if(stack1.empty())
+            front = x;
+        while(!stack1.empty()) {
+            stack2.push(stack1.pop());
+        }
+        stack2.push(x);
+        while(!stack2.empty()) {
+            stack1.push(stack2.pop());
+        }
+    }
+
+//    O(1)
+    public int pop() {
+        int elem =  stack1.pop();
+        if(!stack1.empty()) {
+            front = stack1.peek();
+        }
+        return elem;
+    }
+
+//    O(1)
+    public int peek() {
+        return front;
+    }
+
+//    O(1)
+    public boolean empty() {
+        return stack1.isEmpty();
+    }
+}
+
+// [def];
+class MyQueueN {
+    Stack<Integer> stack1;
+    Stack<Integer> stack2;
+    public MyQueueN() {
+        stack1 = new Stack<>();
+        stack2 = new Stack<>();
+    }
+//  O(1)
     public void push(int x) {
         stack2.push(x);
     }
-
+// O(n)
     public int pop() {
         while(!stack2.empty()) {
             stack1.push(stack2.pop());
@@ -29,7 +115,7 @@ class MyQueue {
         }
         return elem;
     }
-
+// O(n)
     public int peek() {
         while(!stack2.empty()) {
             stack1.push(stack2.pop());
@@ -40,7 +126,7 @@ class MyQueue {
         }
         return elem;
     }
-
+// O(1)
     public boolean empty() {
         return stack2.empty() && stack1.empty();
     }
