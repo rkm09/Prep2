@@ -16,7 +16,7 @@ public class PaintHouse256 {
         System.out.println(ph.minCost(costs));
     }
     
-//    Constant space bottom up DP; time: O(n), space: O(1)
+//    Constant space bottom up DP; time: O(n), space: O(1) [we are remembering up to 6 calculations in two 1 * 3 arrays]
     public int minCost(int[][] costs) {
         int m = costs.length;
         int[] previousRow = costs[m - 1].clone();
@@ -31,6 +31,7 @@ public class PaintHouse256 {
     }
 
 //  Bottom up DP; time: O(n), space: O(n) [in case of an in-place without a new dp array: O(1)]
+//  DP properties: overlapping sub problems + optimal substructure; Greedy : optimal substructure
     public int minCost1(int[][] costs) {
         int m = costs.length;
 //        int[][] dp = costs; this is just a reference and will still overwrite input array
