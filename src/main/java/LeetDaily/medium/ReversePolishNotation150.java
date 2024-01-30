@@ -3,22 +3,77 @@ package LeetDaily.medium;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.Stack;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiFunction;
 
 public class ReversePolishNotation150 {
+    private static Map<String, BiFunction<Integer, Integer, Integer>> OPERATIONS = new HashMap<>();
     public static void main(String[] args) {
         String[] tokens = {"2","1","+","3","*"};
         System.out.println(evalRPN(tokens));
     }
 
+    //    stack; time: O(n), space:O(n) ; fastest
     public static int evalRPN(String[] tokens) {
+        Deque<Integer> stack = new ArrayDeque<>();
+        for(String token : tokens) {
+            if(!"+-*/".contains(token)) {
+                stack.push(Integer.valueOf(token));
+                continue;
+            }
+//            be careful of order
+            int num2 = stack.pop();
+            int num1 = stack.pop();
+            int res = 0;
+            switch(token) {
+                case "+" : res = num1 + num2; break;
+                case "-" : res = num1 - num2; break;
+                case "*" : res = num1 * num2; break;
+                case "/" : res = num1 / num2; break;
+            }
+            stack.push(res);
+        }
+        return stack.pop();
+    }
+
+
+    //  ensure this is done once for all tests
+    static {
+        OPERATIONS.put("+", (a, b) -> a + b);
+        OPERATIONS.put("-", (a, b) -> a - b);
+        OPERATIONS.put("*", (a, b) -> a * b);
+        OPERATIONS.put("/", (a, b) -> a / b);
+    }
+
+//    stack with lambda; time: O(n), space: O(n)
+    public static int evalRPN1(String[] tokens) {
+        Deque<Integer> stack = new ArrayDeque<>();
+        for(String token : tokens) {
+            if(!OPERATIONS.containsKey(token)) {
+                stack.push(Integer.parseInt(token));
+                continue;
+            }
+//            ensure order
+            int num2 = stack.pop();
+            int num1 = stack.pop();
+            BiFunction<Integer, Integer, Integer> operation = OPERATIONS.get(token);
+            int res = operation.apply(num1, num2);
+            stack.push(res);
+        }
+        return stack.pop();
+    }
+
+
+//    [def]  stack; time: O(n), space: O(n)
+    public static int evalRPN2(String[] tokens) {
         if(tokens.length == 1) {
             return Integer.parseInt(tokens[0]);
         }
         Deque<Integer> stack = new ArrayDeque<>();
         stack.push(Integer.parseInt(tokens[0]));
         int i = 0, res = 0;
-        while(!stack.isEmpty() && i++ < tokens.length - 1) {
+        while(i++ < tokens.length - 1) {
             if(!isNan(tokens[i])) {
                 stack.push(Integer.parseInt(tokens[i]));
                 continue;
@@ -42,26 +97,6 @@ public class ReversePolishNotation150 {
         return false;
     }
 
-    public static int evalRPN1(String[] tokens) {
-        int res = 0;
-//        int num1 = Integer.parseInt(tokens[0]), num2 = Integer.parseInt(tokens[1]);
-//        for(int i = 2 ; i < tokens.length ; i++) {
-//            boolean isInt = false;
-//            String curr = tokens[i];
-//            switch(curr) {
-//                case "+" : res += num1 + num2; break;
-//                case "-" : res += num1 - num2; break;
-//                case "*" : res += num1 * num2; break;
-//                case "/" : res += num1 / num2; break;
-//                default: isInt = !isInt;
-//            }
-//            if(isInt) {
-//                num1 = num2;
-//                num2 = Integer.parseInt(curr);
-//            }
-//        }
-        return res;
-    }
 }
 
 /*
