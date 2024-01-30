@@ -1,35 +1,40 @@
 package Top150.tree;
 
+import GenDS.Pair;
 import GenDS.TreeNode;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.LinkedList;
 
 public class ValidateBST98 {
     public static void main(String[] args) {
-        TreeNode left = new TreeNode(1);
-        TreeNode right = new TreeNode(3);
-        TreeNode root = new TreeNode(2, left, right);
-        System.out.println(isValidBST(root));
+        TreeNode left = new TreeNode(4);
+        TreeNode right1 = new TreeNode(3);
+        TreeNode right2 = new TreeNode(7);
+        TreeNode right = new TreeNode(6, right1, right2);
+        TreeNode root = new TreeNode(5, left, right);
+        System.out.println(isValidBST1(root));
     }
 
     public static boolean isValidBST1(TreeNode root) {
         boolean isValid = true;
-        Deque<TreeNode> queue = new ArrayDeque<>() {{ offer(root); }};
-        while(!queue.isEmpty()) {
-            TreeNode node = queue.poll();
-            if(node.left != null) {
-                if(node.left.val >= node.val && node.left.val >= root.val) {
-                    return !isValid;
-                }
-                queue.offer(node.left);
+        Deque<TreeNode> stack = new LinkedList<>() {{ push(root); }};
+        Deque<Pair<Integer, Integer>> stackLimits = new LinkedList<>() {{ push(null); push(null); }};
+        while(!stack.isEmpty()) {
+            TreeNode node = stack.pop();
+            Pair<Integer, Integer> pair = stackLimits.pop();
+            if(node == null) continue;
+            Integer low = (pair == null) ? null : pair.getKey();
+            Integer high = (pair == null) ? null : pair.getValue();
+
+            if((high != null && node.val >= high) || (low != null && node.val <= low)) {
+                return !isValid;
             }
-            if(node.right != null) {
-                if(node.right.val <= node.val && node.right.val <= root.val) {
-                    return !isValid;
-                }
-                queue.offer(node.right);
-            }
+            stack.push(node.left);
+            stackLimits.push(new Pair<>(low, node.val));
+            stack.push(node.right);
+            stackLimits.push(new Pair<>(node.val, high));
         }
         return isValid;
     }
