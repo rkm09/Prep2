@@ -7,13 +7,33 @@ import java.util.Deque;
 public class DailyTemperatures739 {
     public static void main(String[] args) {
         int[] temperatures = {73,74,75,71,69,72,76,73};
-        System.out.println(Arrays.toString(dailyTemperatures(temperatures)));
+        System.out.println(Arrays.toString(dailyTemperatures1(temperatures)));
+    }
+
+    //   array space optimized; time: O(n), space: O(1); fastest
+    public static int[] dailyTemperatures(int[] temperatures) {
+        int n = temperatures.length;
+        int[] answer = new int[n];
+        int hottest = 0;
+        for(int currDay = n - 1 ; currDay >= 0 ; currDay--) {
+            int currTemp = temperatures[currDay];
+            if(currTemp >= hottest) {
+                hottest = temperatures[currDay];
+                continue;
+            }
+            int days = 1;
+            while(temperatures[currDay + days] <= currTemp) {
+                days += answer[currDay + days];
+            }
+            answer[currDay] = days;
+        }
+        return answer;
     }
 
 //    monotonic stack; time: O(n), space: O(n)
 //    monotonic stack is a good option when the problem involves comparing elements with their order being relevant;
 //    delay(push to stack), when elements are coming in descending order, since all will have a common "greater than" answer;
-    public static int[] dailyTemperatures(int[] temperatures) {
+    public static int[] dailyTemperatures1(int[] temperatures) {
         int n = temperatures.length;
         int[] answer = new int[n];
         Deque<Integer> stack = new ArrayDeque<>();
@@ -27,6 +47,8 @@ public class DailyTemperatures739 {
         }
         return answer;
     }
+
+
 
 //    [def]; TLE ; time: O(n^2)
     public static int[] dailyTemperaturesX(int[] temperatures) {
