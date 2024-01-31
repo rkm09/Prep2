@@ -2,23 +2,30 @@ package LeetDaily.hard;
 
 public class KInversePairs629 {
     private static final int M = (int) 1e9 + 7;
+    private static Integer[][] memo;
     public static void main(String[] args) {
-        System.out.println(kInversePairs(4, 2));
+        System.out.println(kInversePairs1(4, 2));
     }
-    public static int kInversePairs(int n, int k) {
-        int[][] dp = new int[n + 1][k + 1];
-        for(int i = 1 ; i <= n ; i++) {
-            for(int j = 0 ; j <= k ; j++) {
-                if(j == 0) {
-                    dp[i][j] = 1;
-                } else {
-                    for(int p = 0 ; p <= Math.min(j, i - 1) ; p++) {
-                        dp[i][j] = (dp[i][j] + dp[i - 1][j - p]) % M;
-                    }
-                }
-            }
+
+//    recursion with memo; time: O(n.k.min(n,k)), space: O(n.k)
+    public static int kInversePairs1(int n, int k) {
+        memo = new Integer[1001][1001];
+        return kInverse(n, k);
+    }
+    private static int kInverse(int n, int k) {
+        if(n == 0)
+            return 0;
+        if(k == 0)
+            return 1;
+        if(memo[n][k] != null) {
+            return memo[n][k];
         }
-        return dp[n][k];
+        int inv = 0;
+        for(int i = 0 ; i <= Math.min(n - 1, k) ; i++) {
+            inv = (inv + kInverse(n - 1, k - i)) % M;
+            memo[n][k] = inv;
+        }
+        return inv;
     }
 }
 
