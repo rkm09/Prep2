@@ -7,7 +7,8 @@ public class KInversePairs629 {
         System.out.println(kInversePairs1(4, 2));
     }
 
-//    recursion with memo; time: O(n.k.min(n,k)), space: O(n.k)
+
+//   [TLE] recursion with memo; time: O(n.k.min(n,k)), space: O(n.k)
     public static int kInversePairs1(int n, int k) {
         memo = new Integer[1001][1001];
         return kInverse(n, k);
