@@ -5,11 +5,46 @@ import java.util.Arrays;
 public class ProductExceptItself538 {
     public static void main(String[] args) {
         int[] nums = {1,2,3,4};
-        System.out.println(Arrays.toString(productExceptSelf(nums)));
+        System.out.println(Arrays.toString(productExceptSelf1(nums)));
     }
-    
+
+//    constant space [using result array as auxiliary]; time: O(n), space: O(1)
+public static int[] productExceptSelf(int[] nums) {
+    int n = nums.length;
+    int[] res = new int[n];
+    res[0] = 1;
+//    left array
+    for(int i = 1 ; i < n ; i++) {
+        res[i] = res[i - 1] * nums[i - 1];
+    }
+    int right = 1;
+    for(int i = n - 1 ; i >= 0 ; i--) {
+        res[i] *= right;
+        right *= nums[i];
+    }
+
+    return res;
+}
+
+    public static int[] productExceptSelf1(int[] nums) {
+        int n = nums.length;
+        int[] res = new int[n];
+        res[n - 1] = 1;
+//        right array
+        for(int i = n - 2 ; i >= 0 ; i--) {
+            res[i] = res[i + 1] * nums[i + 1];
+        }
+        int left = 1;
+        for(int i = 0 ; i < n ; i++) {
+            res[i] *= left;
+            left *= nums[i];
+        }
+
+        return res;
+    }
+
 //    time: O(n), space: O(n)
-    public static int[] productExceptSelf(int[] nums) {
+    public static int[] productExceptSelf2(int[] nums) {
         int n = nums.length;
         int[] res = new int[n];
         int[] left = new int[n];
