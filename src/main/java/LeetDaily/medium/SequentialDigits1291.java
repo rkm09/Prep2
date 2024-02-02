@@ -8,7 +8,7 @@ public class SequentialDigits1291 {
         System.out.println(sequentialDigits(100, 300));
     }
 
-//    sliding window; time: O(1), space: O(1)
+//    sliding window (faster); time: O(1), space: O(1) [time: since low is 2 and high is 9, hence the loops can execute no more than  8*8 = 64 times]
     public static List<Integer> sequentialDigits(int low, int high) {
         List<Integer> nums = new ArrayList<>();
         String sample = "123456789";
@@ -24,6 +24,33 @@ public class SequentialDigits1291 {
         }
         return nums;
     }
+
+//    pre computation; time: O(1), space: O(1) [slower]
+//    there are 36 integers in between. 9-2+1=8, 9-3+1=7...
+    public List<Integer> sequentialDigits1(int low, int high) {
+        Seq s = new Seq();
+        List<Integer> output = new ArrayList<>();
+        for(int num : s.nums) {
+            if(num >= low && num <= high)
+                output.add(num);
+        }
+        return output;
+    }
+
+    class Seq {
+        List<Integer> nums = new ArrayList<>();
+        Seq() {
+            String sample = "123456789";
+            int n = 10;
+            for(int length = 2 ; length < 10 ; length++) {
+                for(int start = 0 ; start < n - length ; start++) {
+                    int num = Integer.parseInt(sample.substring(start, start + length));
+                    nums.add(num);
+                }
+            }
+        }
+    }
+
 }
 
 /*
